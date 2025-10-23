@@ -43,7 +43,7 @@ export default function kvMapModal(props: Props) {
   return (
     <Modal title={t('字段提取')} visible={visible} width={800} onOk={validateAndClose} onCancel={validateAndClose}>
       <div>
-        <div style={{ background: isMcDonalds ? '#fff2cb' : '#6C53B114', marginBottom: 16, padding: 16 }}>
+        <div style={{ background: isMcDonalds ? '#fff2cb' : '#345e3714', marginBottom: 16, padding: 16 }}>
           <InfoCircleOutlined style={{ color: 'var(--fc-primary-color)', marginBottom: 8 }} /> {t('字段提取设置')}
           <div>
             <ul style={{ marginBottom: 0, paddingInlineStart: 24 }}>

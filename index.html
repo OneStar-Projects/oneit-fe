@@ -44,73 +44,81 @@
 
     .preloader__bounce {
       text-align: center;
-      animation-name: preloader-bounce;
-      animation-duration: 0.9s;
-      animation-iteration-count: infinite;
+      position: relative;
     }
 
     .preloader__logo {
       display: inline-block;
-      animation-name: preloader-squash;
-      animation-duration: 0.9s;
-      animation-iteration-count: infinite;
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
       background-repeat: no-repeat;
       background-size: contain;
       background-image: url('/image/logo-light.png');
+      position: relative;
+      border-radius: 12px;
+      /* 循环渐显动画 */
+      animation: logo-breathe 3s ease-in-out infinite;
+    }
+
+    /* 循环光晕效果 */
+    .preloader__logo::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: radial-gradient(
+        circle,
+        rgba(52, 94, 55, 0.3) 0%,
+        rgba(52, 94, 55, 0.1) 30%,
+        transparent 70%
+      );
+      border-radius: 20px;
+      opacity: 0;
+      animation: glow-breathe 3s ease-in-out infinite;
+      z-index: -1;
     }
 
     @keyframes preloader-fade-in {
       0% {
         opacity: 0;
-        /*animation-timing-function: linear;*/
-        animation-timing-function: cubic-bezier(0, 0, 0.5, 1);
+        animation-timing-function: ease-out;
       }
-
       100% {
         opacity: 1;
       }
     }
 
-    @keyframes preloader-bounce {
-
-      from,
-      to {
-        transform: translateY(0px);
-        animation-timing-function: cubic-bezier(0.3, 0, 0.1, 1);
+    /* Logo 呼吸循环动画 */
+    @keyframes logo-breathe {
+      0% {
+        opacity: 0.3;
+        transform: scale(0.9);
       }
-
       50% {
-        transform: translateY(-50px);
-        animation-timing-function: cubic-bezier(0.9, 0, 0.7, 1);
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0.3;
+        transform: scale(0.9);
       }
     }
 
-    @keyframes preloader-squash {
+    /* 光晕呼吸循环动画 */
+    @keyframes glow-breathe {
       0% {
-        transform: scaleX(1.3) scaleY(0.8);
-        animation-timing-function: cubic-bezier(0.3, 0, 0.1, 1);
+        opacity: 0;
+        transform: scale(0.8);
       }
-
-      15% {
-        transform: scaleX(0.75) scaleY(1.25);
-        animation-timing-function: cubic-bezier(0, 0, 0.7, 0.75);
+      50% {
+        opacity: 0.6;
+        transform: scale(1);
       }
-
-      55% {
-        transform: scaleX(1.05) scaleY(0.95);
-        animation-timing-function: cubic-bezier(0.9, 0, 1, 1);
-      }
-
-      95% {
-        transform: scaleX(0.75) scaleY(1.25);
-        animation-timing-function: cubic-bezier(0, 0, 0, 1);
-      }
-
       100% {
-        transform: scaleX(1.3) scaleY(0.8);
-        animation-timing-function: cubic-bezier(0, 0, 0.7, 1);
+        opacity: 0;
+        transform: scale(0.8);
       }
     }
   </style>
@@ -125,7 +133,8 @@
         <div class="preloader__logo" aria-live="polite" role="status" aria-label="Loading Nightingale"></div>
       </div>
     </div>
-  </div>
+ </div>
+  
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
   <script type="module">

@@ -42,8 +42,8 @@ export default function index() {
         });
       },
       style: {
-        fill: darkMode ? '#a192c8' : '#d9cbff',
-        stroke: darkMode ? '#a192c8' : '#d9cbff',
+        fill: darkMode ? '#99bb93' : '#d2fee8',
+        stroke: darkMode ? '#99bb93' : '#d2fee8',
       },
       labelCfg: {
         style: {
@@ -53,7 +53,7 @@ export default function index() {
       },
       nodeStateStyles: {
         hover: {
-          stroke: '#6C53B1',
+          stroke: '#345e37',
           lineWidth: 2,
         },
       },
@@ -75,7 +75,7 @@ export default function index() {
       },
       edgeStateStyles: {
         hover: {
-          stroke: '#6C53B1',
+          stroke: '#345e37',
           lineWidth: 1,
         },
       },

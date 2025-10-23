@@ -38,7 +38,7 @@ const ScatterBulleChart = (props: Props) => {
     data: scatterData,
     xField: 'startTime',
     yField: 'duration',
-    color: 'r(0.4, 0.3, 0.7) 0:rgba(255,255,255,0.5) 1:#6C53B1',
+    color: 'r(0.4, 0.3, 0.7) 0:rgba(255,255,255,0.5) 1:#345e37',
     sizeField: 'spansLengh',
     size: [5, 10],
     shape: 'circle',

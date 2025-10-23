@@ -4,7 +4,7 @@ import { cn } from '@/components/menu/SideMenu/utils';
 import { CommonStateContext } from '@/App';
 import { SIDE_MENU_COLORS, SideMenuColors } from './types';
 
-const THEME_COLOR = 'rgb(108, 83, 177)';
+const THEME_COLOR = 'rgb(52,94,55)';
 export const getSideMenuBgColor = (color: SideMenuColors) => {
   switch (color) {
     case 'light':

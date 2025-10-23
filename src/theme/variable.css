@@ -14,7 +14,7 @@
   --fc-fill-5: rgb(209 213 219);
   --fc-fill-6: rgb(189 194 202);
   --fc-fill-7: rgb(151 156 163);
-  --fc-fill-primary: rgb(108 83 177);
+  --fc-fill-primary: rgb(52 94 55);/*v*/
   --fc-fill-success: rgb(0 167 0);
   --fc-fill-warning: rgb(250 200 0);
   --fc-fill-alert: rgb(250 125 0);
@@ -27,9 +27,9 @@
   --fc-text-3: #666666;
   --fc-text-4: #999999;
   --fc-text-5: #d1d1d9;
-  --fc-text-link: #8162dc;
-  --fc-text-link-light: #a186f4; /* 用于 tooltip 里加亮链接颜色 */
-  --fc-text-link-rgb: 129, 98, 220;
+  --fc-text-link: #2E8B57;/*v*/
+  --fc-text-link-light: #61bc84; /* 用于 tooltip 里加亮链接颜色 *//*v*/
+  --fc-text-link-rgb: 46,139,87;/*v*/
   --fc-text-placeholder: #bfbfbf;
 
   /* 其他 */
@@ -114,7 +114,7 @@
   --fc-fill-5: rgb(47 48 55);
   --fc-fill-6: rgb(54 55 62);
   --fc-fill-7: rgb(62 63 70);
-  --fc-fill-primary: rgb(148, 112, 255);
+  --fc-fill-primary: #2E8B57;/*v*/
   --fc-fill-success: rgb(63 196 83);
   --fc-fill-warning: rgb(230 198 39);
   --fc-fill-alert: rgb(250 125 0);
@@ -122,8 +122,8 @@
   --fc-fill-gold: #ffbc0d;
 
   /* 文本 */
-  --fc-text-link: #9470ff;
-  --fc-text-link-rgb: 148, 112, 255;
+  --fc-text-link: #61bc84;/*v*/
+  --fc-text-link-rgb: 97,188,132;/*v*/
   --fc-text-1: rgba(255, 255, 255);
   --fc-text-2: rgb(204, 204, 220);
   --fc-text-3: rgba(204, 204, 220, 0.85);

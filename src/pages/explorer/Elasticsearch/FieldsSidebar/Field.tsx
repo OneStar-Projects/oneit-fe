@@ -91,7 +91,7 @@ export default function Field(props: Props) {
                         </div>
                         <div className='n9e-es-discover-field-values-topn-item-percent'>{percent}%</div>
                       </div>
-                      <Progress percent={percent} size='small' showInfo={false} strokeColor='#6c53b1' />
+                      <Progress percent={percent} size='small' showInfo={false} strokeColor='#345e37' />
                     </div>
                     <div style={{ width: 32 }}>
                       <Space>

@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   // 后端接口地址
   // 也可以通过环境变量来设置，创建 `.env` 文件，内容为 `PROXY=http://localhost:8080`
-  let proxyURL = env.PROXY || 'http://localhost:8080';
+  let proxyURL = env.PROXY || 'http://tj.onestar.io:17000';
   if (env.VITE_IS_PRO) {
     proxyURL = env.PROXY_PRO;
   } else if (env.VITE_IS_ENT) {
@@ -122,10 +122,10 @@ export default defineConfig(({ mode }) => {
           additionalData: `@import "/src/global.variable.less";`,
           javascriptEnabled: true,
           modifyVars: {
-            'primary-color': '#6C53B1',
+            'primary-color': '#345e37',
             'primary-background': '#F0ECF9',
             'disabled-color': 'rgba(0, 0, 0, 0.5)',
-            'tabs-ink-bar-color': 'linear-gradient(to right, #9F4CFC, #0019F4 )',
+            'tabs-ink-bar-color': '#345e37',
             'font-size-base': '12px',
             'menu-item-font-size': '14px',
             'radio-button-checked-bg': '#EAE6F3',
@@ -135,12 +135,12 @@ export default defineConfig(({ mode }) => {
             'table-row-hover-bg': '#EAE8F2',
             'table-header-bg': '#f0f0f0',
             'select-selection-item-bg': '#EAE6F3',
-            'select-selection-item-border-color': '#6C53B1',
+            'select-selection-item-border-color': '#345e37',
             'menu-item-color': '#8C8C8C',
             'menu-inline-submenu-bg': '#f0f0f0',
             'menu-bg': '#f0f0f0',
             'checkbox-check-bg': '#fff',
-            'checkbox-check-color': '#6C53B1',
+            'checkbox-check-color': '#345e37',
             'checkbox-color': 'fade(@checkbox-check-color, 10)',
             'btn-padding-horizontal-base': '12px',
           },
