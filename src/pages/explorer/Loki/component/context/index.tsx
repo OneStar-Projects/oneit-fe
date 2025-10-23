@@ -26,7 +26,7 @@ function LogContext(props: IProps & ModalWrapProps) {
 
   const getIndexLogColor = (logRow: string) => {
     if (log == logRow) {
-      return '#EAE8F2';
+      return '#eaf3ee';
     }
   };
   const fetchData = async () => {
