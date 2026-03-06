@@ -16,22 +16,34 @@
  */
 import * as datasource from './datasource';
 import * as common from './common';
+import * as hosts from './hosts/index';
 
 const resources = {
   en_US: {
     common: common.en_US,
     datasource: datasource.en_US,
+    hosts: hosts.en_US,
   },
   zh_CN: {
     common: common.zh_CN,
     datasource: datasource.zh_CN,
+    hosts: hosts.zh_CN,
   },
   zh_HK: {
     common: common.zh_HK,
     datasource: datasource.zh_HK,
+    hosts: hosts.zh_CN, // 默认使用简体中文
   },
-  ja_JP: { common: common.ja_JP, datasource: datasource.ja_JP },
-  ru_RU: { common: common.ru_RU, datasource: datasource.ru_RU },
+  ja_JP: { 
+    common: common.ja_JP, 
+    datasource: datasource.ja_JP,
+    hosts: hosts.en_US, // 默认使用英文
+  },
+  ru_RU: { 
+    common: common.ru_RU, 
+    datasource: datasource.ru_RU,
+    hosts: hosts.en_US, // 默认使用英文
+  },
 };
 
 export default resources;

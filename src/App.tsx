@@ -344,7 +344,7 @@ function App() {
                 <HocRenderer></HocRenderer>
               </>
             </Switch>
-            <Feedback />
+            {/* <Feedback /> */}
           </Router>
         </ConfigProvider>
       </CommonStateContext.Provider>

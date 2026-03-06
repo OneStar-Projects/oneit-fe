@@ -1,5 +1,5 @@
 import { FetchFn } from '.';
-import LRUCache from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 
 const fieldsApi = '/sls-fields';
 
@@ -60,7 +60,7 @@ class Cache {
 
   constructor(config?: CacheConfig) {
     const maxAge = config && config.maxAge ? config.maxAge : 5 * 60 * 1000;
-    this.completeAssociation = new LRUCache<string, Map<string, Set<string>>>(maxAge);
+    this.completeAssociation = new LRUCache<string, Map<string, Set<string>>>({ ttl: maxAge, ttlAutopurge: true });
     this.indexNames = [];
   }
 

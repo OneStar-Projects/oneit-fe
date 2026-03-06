@@ -71,6 +71,8 @@ request.interceptors.request.use((url, options) => {
   };
   headers['Authorization'] = `Bearer ${localStorage.getItem(AccessTokenKey) || ''}`;
   headers['X-Language'] = i18next.language;
+  headers['Cache-Control'] = 'no-cache';
+  headers['Pragma'] = 'no-cache';
   return {
     url: basePrefix + url,
     options: { ...options, headers, sourcePathname: location.pathname },

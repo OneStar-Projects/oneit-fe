@@ -13,6 +13,9 @@ import AlertRules from './AlertRules';
 import CollectTpls from './CollectTpls';
 import Metrics from './Metrics';
 import Dashboards from './Dashboards';
+import AgentManagement from './components/AgentManagement';
+import AgentTemplateManagement from './components/AgentTemplateManagement';
+import DeploymentManagement from './components/DeploymentManagement';
 import { getComponents, Component, deleteComponents, putComponent } from './services';
 import ComponentFormModal from './components/ComponentFormModal';
 
@@ -272,6 +275,15 @@ export default function index() {
             </Tabs.TabPane>
             <Tabs.TabPane tab={t('tab_alertRules')} key='tab_alertRules'>
               <AlertRules component_id={activeComponent.id} />
+            </Tabs.TabPane>
+            <Tabs.TabPane tab={t('tab_agentManagement')} key='tab_agentManagement'>
+              <AgentManagement component={activeComponent} onUpdate={fetchData} />
+            </Tabs.TabPane>
+            <Tabs.TabPane tab={t('tab_agentTemplate')} key='tab_agentTemplate'>
+              <AgentTemplateManagement component={activeComponent} onUpdate={fetchData} />
+            </Tabs.TabPane>
+            <Tabs.TabPane tab={t('tab_deploymentManagement')} key='tab_deploymentManagement'>
+              <DeploymentManagement component={activeComponent} />
             </Tabs.TabPane>
           </Tabs>
         )}

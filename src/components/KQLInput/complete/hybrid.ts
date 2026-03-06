@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import i18next from 'i18next';
-import { SyntaxNode } from 'lezer-tree';
+import { SyntaxNode } from '@lezer/common';
 import { Completion, CompletionContext, CompletionResult } from '@codemirror/autocomplete';
 import { syntaxTree } from '@codemirror/language';
 import { EditorState } from '@codemirror/state';

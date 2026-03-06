@@ -118,3 +118,177 @@ export const deleteComponents = (ids: number[]): Promise<any> => {
     return res.dat;
   });
 };
+
+// HostAgent related APIs
+export const getHostAgents = function (params: HostAgentQuery): Promise<HostAgentResponse> {
+  return request('/api/n9e/host-agents', {
+    method: RequestMethod.Get,
+    params,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const createHostAgent = function (data: Partial<HostAgent>): Promise<any> {
+  return request('/api/n9e/host-agents', {
+    method: RequestMethod.Post,
+    data,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const updateHostAgent = function (id: number, data: Partial<HostAgent>): Promise<any> {
+  return request(`/api/n9e/host-agents/${id}`, {
+    method: RequestMethod.Put,
+    data,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const deleteHostAgents = function (ids: number[]): Promise<any> {
+  return request('/api/n9e/host-agents', {
+    method: RequestMethod.Delete,
+    data: { ids },
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+// Agent binary upload API
+export const uploadAgentBinary = function (
+  file: File, 
+  componentId: number, 
+  onProgress?: (progress: number) => void
+): Promise<{ download_url: string; version: string }> {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('component_id', componentId.toString());
+
+  return request('/api/n9e/builtin-components/upload-agent', {
+    method: RequestMethod.Post,
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    onUploadProgress: (progressEvent) => {
+      if (onProgress && progressEvent.total) {
+        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        onProgress(progress);
+      }
+    },
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+// Agent version management APIs
+export const getAgentVersions = function (componentId: number): Promise<AgentVersion[]> {
+  return request(`/api/n9e/agent-versions/component/${componentId}`, {
+    method: RequestMethod.Get,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const getActiveAgentVersion = function (componentId: number): Promise<AgentVersion | null> {
+  return request(`/api/n9e/agent-versions/component/${componentId}/active`, {
+    method: RequestMethod.Get,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const createAgentVersion = function (data: Partial<AgentVersion>): Promise<any> {
+  return request('/api/n9e/agent-versions', {
+    method: RequestMethod.Post,
+    data,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const updateAgentVersion = function (versionId: number, data: Partial<AgentVersion>): Promise<any> {
+  return request(`/api/n9e/agent-versions/version/${versionId}`, {
+    method: RequestMethod.Put,
+    data,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const deleteAgentVersion = function (versionId: number): Promise<any> {
+  return request(`/api/n9e/agent-versions/version/${versionId}`, {
+    method: RequestMethod.Delete,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const activateAgentVersion = function (componentId: number, versionId: number): Promise<any> {
+  return request(`/api/n9e/agent-versions/component/${componentId}/activate/${versionId}`, {
+    method: RequestMethod.Post,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+// Agent deployment APIs
+export const getAgentDeployments = function (params: {
+  host_id?: number;
+  component_id?: number;
+  status?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<{ list: AgentDeployment[]; total: number }> {
+  return request('/api/n9e/agent-deployments', {
+    method: RequestMethod.Get,
+    params,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const getAgentDeployment = function (deploymentId: number): Promise<AgentDeployment> {
+  return request(`/api/n9e/agent-deployments/${deploymentId}`, {
+    method: RequestMethod.Get,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const deployAgents = function (data: {
+  host_ids: number[];
+  component_id: number;
+  version_id: number;
+  config_data?: any;
+}): Promise<{ task_id: string }> {
+  return request('/api/n9e/agent-deployments/deploy', {
+    method: RequestMethod.Post,
+    data,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const getDeployStatus = function (taskId: string): Promise<{
+  task_id: string;
+  status: string;
+  progress: number;
+  message: string;
+  results: Record<number, {
+    host_id: number;
+    status: string;
+    message: string;
+    deployed_at: number;
+  }>;
+  create_at: number;
+  update_at: number;
+}> {
+  return request(`/api/n9e/agent-deployments/status/${taskId}`, {
+    method: RequestMethod.Get,
+  }).then((res) => {
+    return res.dat;
+  });
+};

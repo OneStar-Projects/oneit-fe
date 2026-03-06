@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
-import LRUCache from 'lru-cache';
+import { LRUCache } from 'lru-cache';
 import { parseRange } from '@/components/TimeRangePicker';
 import { getFullFields } from '@/pages/explorer/Elasticsearch/services';
 import { getESVariableResult } from '@/services/dashboardV2';
@@ -87,7 +87,7 @@ class Cache {
   constructor(config?: CacheConfig) {
     const maxAge = config && config.maxAge ? config.maxAge : 5 * 60 * 1000;
     this.fields = [];
-    this.fieldValues = new LRUCache<string, string[]>(maxAge);
+    this.fieldValues = new LRUCache<string, string[]>({ ttl: maxAge, ttlAutopurge: true });
   }
 
   setFields(fields: string[]): void {

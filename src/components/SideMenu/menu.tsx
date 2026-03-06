@@ -19,6 +19,10 @@ export const getMenuList = (embeddedProductMenu: MenuItem[] = [], hideDeprecated
           type: 'tabs',
           children: [{ key: '/targets', label: 'menu.targets' }],
         },
+        {
+          key: '/managed-hosts',
+          label: 'hosts.title',
+        },
       ],
     },
     {
