@@ -34,6 +34,7 @@ import { getLicense } from '@/components/AdvancedWrap';
 import { getVersions } from '@/components/pageLayout/Version/services';
 import { getCleanBusinessGroupIds, getDefaultBusiness, getVaildBusinessGroup } from '@/components/BusinessGroup';
 import Feedback from '@/components/Feedback';
+import { IRawTimeRange } from '@/components/TimeRangePicker';
 import { getN9eConfig } from '@/pages/siteSettings/services';
 import { getDarkMode, updateDarkMode } from '@/utils/darkMode';
 import SharedDetail from '@/pages/event/DetailNG/SharedDetail';
@@ -123,19 +124,23 @@ export interface ICommonState {
   screenTemplates?: string[];
   tablePaginationPosition?: string; // 表格分页位置
   installTs: number; // 安装时间戳
+  i18nList?: string[];
+  rangePickerShowSecond?: boolean; // 时间范围选择器是否显示秒选择
+  logsDefaultRange: IRawTimeRange; // 日志默认时间范围
 }
 
 export const basePrefix = import.meta.env.VITE_PREFIX || '';
 
 // 可以匿名访问的路由 TODO: job-task output 应该也可以匿名访问
-const anonymousRoutes = [`${basePrefix}/login`, `${basePrefix}/callback`, `${basePrefix}/chart`, `${basePrefix}/dashboards/share/`, `${basePrefix}/share/alert-his-events/`];
+const anonymousRoutes = [`${basePrefix}/login`, `${basePrefix}/callback`, `${basePrefix}/share/alert-his-events/`];
+const anonymousRoutesNeedDataSource = [`${basePrefix}/chart`, `${basePrefix}/dashboards/share/`];
 // 判断是否是匿名访问的路由
-const anonymous = _.some(anonymousRoutes, (route) => location.pathname.startsWith(route));
+const anonymous = _.some(anonymousRoutes.concat(anonymousRoutesNeedDataSource), (route) => location.pathname.startsWith(route));
 // 初始化数据 context
 export const CommonStateContext = createContext({} as ICommonState);
 
 function App() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['common', 'datasource']);
   const isPlus = useIsPlus();
   const initialized = useRef(false);
   const [commonState, setCommonState] = useState<ICommonState>({
@@ -143,17 +148,24 @@ function App() {
     groupedDatasourceList: {},
     reloadGroupedDatasourceList: async () => {
       const datasourceList = await getDatasourceBriefList();
-      setCommonState((state) => ({ ...state, groupedDatasourceList: _.groupBy(datasourceList, 'plugin_type') }));
+      setCommonState((state) => ({
+        ...state,
+        groupedDatasourceList: _.groupBy(_.orderBy(datasourceList, ['is_default', 'plugin_type', 'weight'], ['desc', 'asc', 'asc']), 'plugin_type'),
+      }));
     },
     datasourceList: [],
     setDatasourceList: (datasourceList) => {
-      setCommonState((state) => ({ ...state, datasourceList, groupedDatasourceList: _.groupBy(datasourceList, 'plugin_type') }));
+      setCommonState((state) => ({
+        ...state,
+        datasourceList,
+        groupedDatasourceList: _.groupBy(_.orderBy(datasourceList, ['is_default', 'plugin_type', 'weight'], ['desc', 'asc', 'asc']), 'plugin_type'),
+      }));
     },
     reloadDatasourceList: async () => {
       const { feats } = await getLicense(t);
       const datasourceList = await getDatasourceBriefList();
       const datasourceCateOptions = getAuthorizedDatasourceCates(feats, isPlus, (cate) => {
-        const groupedDatasourceList = _.groupBy(datasourceList, 'plugin_type');
+        const groupedDatasourceList = _.groupBy(_.orderBy(datasourceList, ['is_default', 'plugin_type', 'weight'], ['desc', 'asc', 'asc']), 'plugin_type');
         return !_.isEmpty(groupedDatasourceList[cate.value]);
       });
       setCommonState((state) => ({ ...state, datasourceList, groupedDatasourceList: _.groupBy(datasourceList, 'plugin_type'), datasourceCateOptions }));
@@ -210,6 +222,7 @@ function App() {
     dashboardSaveMode: 'manual',
     screenTemplates: [],
     installTs: 0,
+    logsDefaultRange: { start: 'now-1h', end: 'now' },
   });
 
   const removePreloader = () => {
@@ -275,8 +288,8 @@ function App() {
                 const groupedDatasourceList = _.groupBy(datasourceList, 'plugin_type');
                 return !_.isEmpty(groupedDatasourceList[cate.value]);
               }),
-              groupedDatasourceList: _.groupBy(datasourceList, 'plugin_type'),
-              datasourceList: datasourceList,
+              groupedDatasourceList: _.groupBy(_.orderBy(datasourceList, ['is_default', 'plugin_type', 'weight'], ['desc', 'asc', 'asc']), 'plugin_type'),
+              datasourceList: _.orderBy(datasourceList, ['is_default', 'plugin_type', 'weight'], ['desc', 'asc', 'asc']),
               curBusiId: defaultBusiId,
               licenseRulesRemaining,
               licenseExpireDays,
@@ -288,9 +301,7 @@ function App() {
             };
           });
         } else {
-          const datasourceList = !_.some([`${basePrefix}/login`, `${basePrefix}/callback`, `${basePrefix}/share/alert-his-events/`], (route) => location.pathname.startsWith(route))
-            ? await getDatasourceBriefList()
-            : [];
+          const datasourceList = !_.some(anonymousRoutes, (route) => location.pathname.startsWith(route)) ? await getDatasourceBriefList() : [];
           removePreloader();
           initialized.current = true;
           setCommonState((state) => {

@@ -62,6 +62,7 @@ interface Dashboard {
   name: string;
   ident?: string;
   tags: string;
+  note?: string;
   configs?: string;
 }
 // 创建仪表盘
@@ -112,7 +113,7 @@ export const getDashboard = function (id: string | number) {
 };
 
 // 更新仪表盘 - 只能更新 name 和 tags
-export const updateDashboard = function (id: string | number, data: { name: string; ident?: string; tags: string }) {
+export const updateDashboard = function (id: string | number, data: { name: string; ident?: string; tags: string; note?: string }) {
   return request(`/api/n9e/board/${id}`, {
     method: RequestMethod.Put,
     data,
@@ -326,4 +327,26 @@ export const deleteAnnotations = function (id: number) {
   return request(`/api/n9e/dashboard-annotation/${id}`, {
     method: RequestMethod.Delete,
   });
+};
+
+// 大盘/业务组 名称
+export const getDashboardName = (id: number[], silence?: boolean) => {
+  return request(`/api/n9e/boards?bids=${id}`, {
+    method: RequestMethod.Get,
+    silence,
+  }).then((res) => {
+    return res.dat;
+  });
+};
+
+export const getDataSourceList = (data) => {
+  return request(`/api/v1/datasource/list`, {
+    method: RequestMethod.Post,
+    data: {
+      p: 1,
+      limit: 200,
+      category: 'tracing',
+      ...data,
+    },
+  }).then((res) => res.data);
 };

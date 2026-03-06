@@ -2,23 +2,21 @@ import React from 'react';
 import _ from 'lodash';
 import { Popover, Tooltip } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
-import { IRawTimeRange } from '@/components/TimeRangePicker';
+
+import replaceTemplateVariables from '@/pages/dashboard/Variables/utils/replaceTemplateVariables';
+
 import { IPanel } from '../../../types';
-import { getDetailUrl } from '../../utils/replaceExpressionDetail';
-import { useGlobalState } from '../../../globalState';
 
 interface Props {
   text: string;
   color?: string;
   style?: React.CSSProperties;
   panel: IPanel;
-  time: IRawTimeRange;
   record: any;
 }
 
 export default function Cell(props: Props) {
-  const [dashboardMeta] = useGlobalState('dashboardMeta');
-  const { text, color, style, panel, time, record } = props;
+  const { text, color, style, panel, record } = props;
   const { custom } = panel;
   const { links, linkMode, nowrap = false } = custom;
   const firstLink = _.first<any>(links);
@@ -29,6 +27,14 @@ export default function Cell(props: Props) {
     value: record.value,
     metric: record.metric,
   };
+
+  const scopedVars = {
+    '__field.name': data.name,
+    '__field.value': data.value,
+  };
+  _.forEach(data.metric, (value, key) => {
+    scopedVars[`__field.labels.${key}`] = value;
+  });
 
   return (
     <Tooltip placement='topLeft' title={nowrap ? text : undefined}>
@@ -52,7 +58,12 @@ export default function Cell(props: Props) {
                     {_.map(links, (link, idx) => {
                       return (
                         <div key={idx}>
-                          <a target={link.targetBlank ? '_blank' : '_self'} href={getDetailUrl(link.url, data, dashboardMeta, time)}>
+                          <a
+                            target={link.targetBlank ? '_blank' : '_self'}
+                            href={replaceTemplateVariables(link.url, {
+                              scopedVars,
+                            })}
+                          >
                             <LinkOutlined /> {link.title}
                           </a>
                         </div>
@@ -64,7 +75,13 @@ export default function Cell(props: Props) {
                 <a style={styleObj}>{text}</a>
               </Popover>
             ) : (
-              <a target={firstLink?.targetBlank ? '_blank' : '_self'} href={getDetailUrl(firstLink?.url, data, dashboardMeta, time)} style={styleObj}>
+              <a
+                target={firstLink?.targetBlank ? '_blank' : '_self'}
+                href={replaceTemplateVariables(firstLink?.url, {
+                  scopedVars,
+                })}
+                style={styleObj}
+              >
                 {text}
               </a>
             )}

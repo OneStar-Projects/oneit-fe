@@ -126,6 +126,33 @@ export const authCallbackCustom = function (params) {
   });
 };
 
+export const getRedirectURLDingtalk = function (redirect: string) {
+  return request('/api/n9e/auth/redirect/dingtalk', {
+    method: RequestMethod.Get,
+    params: { redirect },
+  });
+};
+export const getRedirectURLFeishu = function (redirect: string) {
+  return request('/api/n9e/auth/redirect/feishu', {
+    method: RequestMethod.Get,
+    params: { redirect },
+  });
+};
+
+export const authCallbackDingtalk = function (params) {
+  return request('/api/n9e/auth/callback/dingtalk', {
+    method: RequestMethod.Get,
+    params,
+  });
+};
+
+export const authCallbackFeishu = function (params) {
+  return request('/api/n9e/auth/callback/feishu', {
+    method: RequestMethod.Get,
+    params,
+  });
+};
+
 export const getSsoConfig = function () {
   return request('/api/n9e/auth/sso-config', {
     method: RequestMethod.Get,

@@ -15,7 +15,7 @@
  *
  */
 import React, { useEffect, useContext } from 'react';
-import { Switch, Route, useLocation, Redirect, useHistory } from 'react-router-dom';
+import { Switch, Route, useLocation, Redirect, useHistory, matchPath } from 'react-router-dom';
 import querystring from 'query-string';
 import _ from 'lodash';
 import { getMenuPerm } from '@/services/common';
@@ -30,6 +30,8 @@ import LoginCallback from '@/pages/loginCallback';
 import LoginCallbackCAS from '@/pages/loginCallback/cas';
 import LoginCallbackOAuth from '@/pages/loginCallback/oauth';
 import LoginCallbackCustom from '@/pages/loginCallback/Custom';
+import LoginCallbackDingTalk from '@/pages/loginCallback/DingTalk';
+import LoginCallbackFeishu from '@/pages/loginCallback/Feishu';
 import AlertRules, { Add as AlertRuleAdd, Edit as AlertRuleEdit } from '@/pages/alertRules';
 import Profile from '@/pages/account/profile';
 import { List as Dashboard, Detail as DashboardDetail, Share as DashboardShare } from '@/pages/dashboard';
@@ -77,6 +79,7 @@ import { Jobs as StrategyBrain } from 'plus:/datasource/anomaly';
 import plusLoader from 'plus:/utils/loader';
 // @ts-ignore
 import useIsPlus from 'plus:/components/useIsPlus';
+import { spaceIdRoutes } from './config';
 
 const Packages = dynamicPackages();
 let lazyRoutes = Packages.reduce((result: any, module: Entry) => {
@@ -114,14 +117,14 @@ export default function Content() {
      * 这里是一个很脆弱的权限控制，期望的效果是菜单配置的路径和权限点匹配，如果没有权限则重定向到 403 页面
      * 但是目前无法把菜单配置和perms权限点一一对应
      * 所以这里现在只能通过白名单的方式来单独处理个别未配置权限点的路径
-     * /docs/等页面不进行权限校验
      */
     if (
       profile?.roles?.length > 0 &&
-      !_.includes(['/', '/account/profile/info', '/account/profile/pwd', '/account/profile/token'], location.pathname) &&
-      !location.pathname.includes('/docs/') &&
+      !_.includes(['/', '/account/profile/info', '/account/profile/pwd', '/account/profile/token', '/alert-aggr-events'], location.pathname) &&
       !location.pathname.includes('/settings/datasource/edit/') &&
-      !location.pathname.includes('/settings/source/')
+      !location.pathname.includes('/settings/infrastructure/add') &&
+      !location.pathname.includes('/settings/source/') &&
+      !location.pathname.includes('/403')
     ) {
       if (profile?.roles.indexOf('Admin') === -1) {
         // 如果没有权限则重定向到 403 页面
@@ -136,6 +139,15 @@ export default function Content() {
     }
   }, []);
 
+  useEffect(() => {
+    if (import.meta.env.VITE_IS_ENT === 'true') {
+      const isMatch = spaceIdRoutes.find((route) => matchPath(location.pathname, { path: route, exact: true }));
+      if (isMatch) {
+        // urlAddSpaceId(history);
+      }
+    }
+  }, [location.pathname]);
+
   return (
     <div className='content'>
       <Switch>
@@ -146,6 +158,8 @@ export default function Content() {
         <Route path='/callback/cas' component={LoginCallbackCAS} exact />
         <Route path='/callback/oauth' component={LoginCallbackOAuth} exact />
         <Route path='/callback/custom' component={LoginCallbackCustom} exact />
+        <Route path='/callback/dingtalk' component={LoginCallbackDingTalk} exact />
+        <Route path='/callback/feishu' component={LoginCallbackFeishu} exact />
         <Route path='/metric/explorer' component={MetricExplore} exact />
         <Route path='/log/explorer' component={LogExplore} exact />
         <Route path='/log/index-patterns' component={IndexPatterns} exact />

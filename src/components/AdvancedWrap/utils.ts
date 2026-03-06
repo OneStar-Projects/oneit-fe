@@ -98,8 +98,8 @@ export const baseCates: Cate[] = [
     label: 'Doris',
     type: ['logging'],
     alertRule: true,
-    dashboard: false,
-    dashboardVariable: false,
+    dashboard: true,
+    dashboardVariable: true,
     graphPro: true,
     alertPro: false,
     logo: '/image/logos/doris.png',
@@ -126,6 +126,17 @@ export const baseCates: Cate[] = [
     alertPro: false,
     logo: '/image/logos/pgsql.png',
   },
+  {
+    value: 'victorialogs',
+    label: 'VictoriaLogs',
+    type: ['logging'],
+    alertRule: true,
+    dashboard: false,
+    dashboardVariable: false,
+    graphPro: true,
+    alertPro: false,
+    logo: '/image/logos/victorialogs.png',
+  },
 ];
 
 export const allCates = [...baseCates, ...advancedCates];
@@ -141,4 +152,9 @@ export const getAuthorizedDatasourceCates = (feats, isPlus, filter?: (cate: any)
     cates = _.filter(cates, filter);
   }
   return cates;
+};
+
+export const getGraphProByCate = (cate: string) => {
+  const currentCate = _.find(allCates, { value: cate });
+  return currentCate?.graphPro;
 };

@@ -32,14 +32,14 @@ const MetricExplorerPage = () => {
   ]);
 
   return (
-    <PageLayout title={t('title')} icon={<LineChartOutlined />}>
+    <PageLayout title={t('title')} icon={<LineChartOutlined />} doc='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v8/quickstart/ad-hoc/'>
       <div>
         <div style={{ boxShadow: 'unset', background: 'unset' }}>
           <div>
             {_.map(panels, (panel, idx) => {
               return (
-                <div key={panel.uuid} className='n9e-fill-color-2 n9e-border-base' style={{ padding: 16, maxHeight: 650, marginBottom: 16, position: 'relative', display: 'flex' }}>
-                  <Explorer type='metric' defaultCate='prometheus' panelIdx={idx} />
+                <div key={panel.uuid} className='bg-fc-100 fc-border' style={{ padding: 16, maxHeight: 650, marginBottom: 16, position: 'relative', display: 'flex' }}>
+                  <Explorer tabKey={panel.uuid} type='metric' defaultCate='prometheus' panelIdx={idx} />
                   {panels.length > 1 && (
                     <CloseCircleOutlined
                       style={{

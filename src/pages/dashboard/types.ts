@@ -29,9 +29,9 @@ export interface ITarget {
   __mode__: '__expr__' | '__query__';
   expr: string; // promQL
   legendFormat: string;
-  time?: IRawTimeRange; // 固定时间范围
+  time?: IRawTimeRange; // 固定时间范围，2025-10-20 废弃
   step?: number; // 2024-01-24 从固定 step 改成 min step (v7)
-  maxDataPoints?: number; // 2024-01-24 新增 maxDataPoints 用于计算默认的 step (v7)
+  maxDataPoints?: number; // 2024-01-24 新增 maxDataPoints 用于计算默认的 step (v7)，2025-10-20 废弃
   query?: {
     index: string;
     index_type: 'index' | 'index_pattern';
@@ -45,7 +45,7 @@ export interface ITarget {
   hide?: boolean;
 }
 
-export type IType = 'row' | 'timeseries' | 'stat' | 'table' | 'pie' | 'hexbin' | 'barGauge' | 'text' | 'gauge' | 'iframe';
+export type IType = 'row' | 'timeseries' | 'stat' | 'table' | 'tableNG' | 'pie' | 'hexbin' | 'barGauge' | 'text' | 'gauge' | 'iframe';
 
 export interface IValueMapping {
   match: {
@@ -81,7 +81,6 @@ export interface LinksItem {
 }
 
 export interface IStandardOptions {
-  util?: string; // 错别字
   unit?: string; // 纠正的单位
   min?: number;
   max?: number;
@@ -148,7 +147,7 @@ export interface ITimeseriesStyles {
   drawStyle: 'lines' | 'bars';
   lineInterpolation: 'linear' | 'smooth';
   fillOpacity: number;
-  stack: 'off' | 'noraml'; // off 关闭；normal 开启，此结构未后期其他模式预留
+  stack: 'off' | 'normal'; // off 关闭；normal 开启，此结构未后期其他模式预留
   scaleDistribution: {
     type: 'linear' | 'log';
     log?: 10 | 2;
@@ -264,6 +263,8 @@ export interface IPanel {
   maxPerRow?: number;
   repeatPanelId?: string;
   scopedVars?: any;
+  maxDataPoints?: number; // 2025-10-20 新增
+  queryOptionsTime?: IRawTimeRange; // 2025-10-20 新增， queryOptionsTime 会覆盖 time
 }
 
 export interface IVariable {
@@ -294,6 +295,7 @@ export interface IDashboard {
   name: string;
   ident?: string;
   tags: string;
+  note?: string;
   update_at: number;
   update_by: string;
   configs: IDashboardConfig;

@@ -31,9 +31,14 @@ const en_US = {
   effective_time_end: 'End time',
   effective_time_end_msg: 'End time is required',
   effective_time_week_msg: 'Please select effective week',
+  effective_time_tip: 'Both 00:00-00:00 and 00:00-23:59 mean effective all day',
   enable_in_bg: 'Enable in buisness group',
   enable_in_bg_tip:
-    'Determined according to the ownership relationship of the ident tag in the alert event, that is: if the machine corresponding to the ident tag in the alert event does not belong to the business group, the alert event will be discarded',
+    'If the alert event contains the ident tag and the corresponding machine does not belong to this business group, the alert event will be discarded; if the alert event does not contain the ident tag, this filter condition will not take effect and will continue to follow-up processing.',
+  time_zone: 'Time zone',
+  time_zone_tip: 'Time zone only affects the start time and end time in the rule, and does not affect the relevant time fields of viewing alert events',
+  local_time: 'Local time',
+
   notify_configs: 'Notification Configuration',
   notify_rule_ids: 'Notification rule',
   switch_to_old: 'Switch to old version',
@@ -161,6 +166,7 @@ const en_US = {
         annotations: 'Annotations',
         triggers: 'Triggers',
         cron_pattern: 'Execution frequency',
+        time_zone: 'Time zone',
       },
     },
     cloneToHosts: {
@@ -225,7 +231,7 @@ const en_US = {
     disabled: 'Enable',
     severity: 'Severity',
     status: 'Status',
-    status_tip: 'Whether the alarm rule currently triggers the alarm event. The default statistics are the data of the last 30 days',
+    status_tip: 'Whether the alarm rule currently triggers the alarm event. Only data from the last 30 days will be counted and displayed',
   },
   expired: 'The alert rule has been modified by others. To avoid mutual coverage, please refresh the page to view the latest configuration',
   relabel: {
@@ -339,6 +345,11 @@ const en_US = {
   },
   enrich: {
     select_tip: 'Clone query conditions (leave blank to create directly without cloning)',
+  },
+  pipeline_configuration: {
+    title: 'Event workflow',
+    name_placeholder: 'Please select event workflow',
+    add_btn: 'Add event workflow',
   },
 };
 export default en_US;

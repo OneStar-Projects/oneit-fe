@@ -40,7 +40,7 @@ const ru_RU = {
       time_sort_asc: 'Сортировка по возрастанию',
       all: 'Все',
       custom: 'Пользовательский',
-      custom_validated: 'Количество должно быть от 1 до 65535',
+      custom_validated: 'Количество не может превышать {{maxCount}}',
       all_quantity: 'Общее количество',
       createSuccess: 'Задача создана успешно',
     },
@@ -58,11 +58,19 @@ const ru_RU = {
       del_btn_tips: 'Вы уверены, что хотите удалить?',
       del_btn: 'Удалить',
       emptyText: 'Нет записей для экспорта, нажмите на кнопку "Поиск журнала", а затем на кнопку "Скачать журнал" для экспорта данных',
+      size: 'Размер файла',
+      reload_btn_tip: 'Обновить',
     },
     field_actions: {
       and: 'Добавить к этому поиску',
       not: 'Исключить из этого поиска',
       exists: 'Фильтровать документы, содержащие это поле',
+    },
+    field_values_topn: {
+      label: 'Топ {{n}} значений',
+      settings: {
+        title: 'Настройки Топ N значений',
+      },
     },
   },
   historicalRecords: {
@@ -74,6 +82,69 @@ const ru_RU = {
   help: 'Использование',
   clear_tabs: 'Очистить',
   clear_tabs_tip: 'Оставить только текущую вкладку',
+  stats: {
+    unique_count: 'Количество уникальных значений',
+    min: 'мин',
+    max: 'макс',
+    sum: 'сумма',
+    avg: 'среднее',
+    topn_no_data: 'Нет данных',
+    unindexable: 'Поле не индексируемое, невозможно выполнить статистический анализ',
+  },
+  field_list: {
+    show_fields: 'Показать поля',
+    available_fields: 'Доступные поля',
+  },
+  empty_value_not_supported_tip: 'Пустые значения в настоящее время не поддерживаются в фильтрах поиска',
+  logs: {
+    title: 'Журналы',
+    count: 'Количество',
+    filter_fields: 'Фильтр полей',
+    settings: {
+      mode: {
+        origin: 'Исходный',
+        table: 'Таблица',
+      },
+      breakLine: 'Перенос строки',
+      reverse: 'Время',
+      lines: 'Номера строк',
+      time: 'Время журнала',
+      organizeFields: {
+        title: 'Настройки столбцов полей',
+        allFields: 'Доступные поля',
+        showFields: 'Отображаемые поля',
+        showFields_empty: 'По умолчанию отображаются все поля журнала',
+      },
+      jsonSettings: {
+        title: 'Настройки JSON',
+        displayMode: 'Тип отображения по умолчанию',
+        displayMode_tree: 'Древовидное отображение',
+        displayMode_string: 'Строковое отображение',
+        expandLevel: 'Уровень раскрытия по умолчанию',
+      },
+      pageLoadMode: {
+        title: 'Режим загрузки страниц',
+        pagination: 'Постраничная навигация',
+        infiniteScroll: 'Бесконечная прокрутка',
+      },
+    },
+    tagsDetail: 'Детали тегов',
+    expand: 'Развернуть',
+    collapse: 'Свернуть',
+    fieldValues_topnNoData: 'Нет данных',
+    stats: {
+      numberOfUniqueValues: 'Количество уникальных значений',
+      min: 'Минимум',
+      max: 'Максимум',
+      sum: 'Сумма',
+      avg: 'Среднее',
+    },
+    fieldLabelTip: 'Статистика для поля не включена, статистический анализ невозможен',
+    filterAnd: 'Добавить к этому поиску',
+    filterNot: 'Исключить из этого поиска',
+    total: 'Количество записей журнала',
+    stack_group_by_tip: 'Отобразить сложенный график тенденций по этому значению поля',
+  },
 };
 
 export default ru_RU;

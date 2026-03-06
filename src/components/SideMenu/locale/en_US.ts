@@ -36,7 +36,8 @@ const en_US = {
     notification_rules: 'Rules',
     notification_channels: 'Media types',
     notification_templates: 'Message templates',
-    event_pipeline: 'Event pipelines',
+    event_pipeline: 'Workflow',
+    event_pipeline_executions: 'Execution records',
     notification_settings: 'Notification settings',
     notification_tpls: 'Template',
     integrations: 'Integrations',
@@ -57,6 +58,7 @@ const en_US = {
     audit_log: 'Audit log',
     alert_servers: 'Alerting engines',
     about: 'About',
+    license_management: 'License Management',
   },
 };
 export default en_US;

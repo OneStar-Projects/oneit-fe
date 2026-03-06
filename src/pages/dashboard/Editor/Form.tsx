@@ -1,53 +1,41 @@
-/*
- * Copyright 2022 Nightingale Team
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-import React, { useState, useImperativeHandle, forwardRef, useContext } from 'react';
+import React, { useImperativeHandle, forwardRef, useContext } from 'react';
 import { Form, Row, Col, Button, Space, Switch, Tooltip, Mentions, Collapse as AntdCollapse, Select } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import { useTranslation, Trans } from 'react-i18next';
+import queryString from 'query-string';
+import { useLocation } from 'react-router-dom';
+
 import { CommonStateContext } from '@/App';
-import { Dashboard } from '@/store/dashboardInterface';
 import { SIZE } from '@/utils/constant';
+
 import { defaultValues, defaultCustomValuesMap } from './config';
 import Options from './Options';
 import Collapse, { Panel } from './Components/Collapse';
-import VariableConfig, { IVariable } from '../VariableConfig';
 import Renderer from '../Renderer/Renderer';
+import { useGlobalState } from '../globalState';
 import QueryEditor from './QueryEditor';
+import VariablesMain from '../Variables/Main';
 
 interface IProps {
   panelWidth?: number; // 面板宽度
   initialValues: any;
-  variableConfig?: IVariable[];
   range: any;
   timezone: string;
   id: string;
-  dashboardId: string;
-  dashboard: Dashboard;
+  editModalVariablecontainerRef: React.RefObject<HTMLDivElement>;
 }
 
 function FormCpt(props: IProps, ref) {
   const { t } = useTranslation('dashboard');
   const { darkMode } = useContext(CommonStateContext);
+  const [variablesWithOptions] = useGlobalState('variablesWithOptions');
   const [chartForm] = Form.useForm();
-  const { panelWidth, initialValues, variableConfig, range, timezone, id, dashboardId, dashboard } = props;
-  const [variableConfigWithOptions, setVariableConfigWithOptions] = useState<IVariable[] | undefined>();
+  const { panelWidth, initialValues, range, timezone, id } = props;
   const type = Form.useWatch('type', chartForm);
   const values = Form.useWatch([], chartForm);
+  const location = useLocation();
+  const queryParams = location.search ? queryString.parse(location.search) : {};
 
   defaultValues.custom = defaultCustomValuesMap[initialValues?.type || defaultValues.type];
 
@@ -90,33 +78,20 @@ function FormCpt(props: IProps, ref) {
           }}
         >
           <Col flex={1} style={{ minWidth: 100 }}>
-            <div className='n9e-dashboard-editor-modal-left-wrapper n9e-gap-2'>
-              {variableConfig && variableConfig.length > 0 && (
-                <div className='n9e-dashboard-editor-modal-left-vars-wrapper n9e-gap-2'>
-                  <span>{t('var.vars')}</span>
-                  <VariableConfig
-                    isPreview
-                    editable={false}
-                    onChange={(value, bool, withOptions) => {
-                      setVariableConfigWithOptions(withOptions || []);
-                    }}
-                    value={variableConfig}
-                    range={range}
-                    id={dashboardId}
-                    dashboard={dashboard}
-                  />
-                </div>
-              )}
-              <div className='n9e-border-base n9e-dashboard-editor-modal-left-chart-wrapper'>
+            <div className='n9e-dashboard-editor-modal-left-wrapper gap-4'>
+              <div className='n9e-dashboard-editor-modal-left-vars-wrapper gap-4'>
+                <span>{t('var.vars')}</span>
+                {/* 直接渲染变量选择器，避免依赖 portal 对 ref 变化不触发重渲染的问题 */}
+                <VariablesMain variableValueFixed={queryParams.__variable_value_fixed as any} loading={false} />
+              </div>
+              <div className='fc-border n9e-dashboard-editor-modal-left-chart-wrapper'>
                 {values && (
                   <Renderer
-                    id={id}
-                    dashboardId={dashboardId}
-                    dashboardID={dashboard.id}
+                    id={`${id}__editor__`}
+                    panelWidth={panelWidth}
                     time={range}
                     timezone={timezone}
                     values={values}
-                    variableConfig={variableConfigWithOptions}
                     isPreview
                     themeMode={darkMode ? 'dark' : undefined}
                     annotations={[]}
@@ -125,7 +100,7 @@ function FormCpt(props: IProps, ref) {
               </div>
               {!_.includes(['text', 'iframe'], type) && (
                 <div className='n9e-dashboard-editor-modal-left-query-wrapper'>
-                  <QueryEditor panelWidth={panelWidth} chartForm={chartForm} type={type} variableConfig={variableConfigWithOptions} dashboardId={dashboardId} time={range} />
+                  <QueryEditor panelWidth={panelWidth} type={type} variablesWithOptions={variablesWithOptions} range={range} />
                 </div>
               )}
             </div>
@@ -150,7 +125,7 @@ function FormCpt(props: IProps, ref) {
                     ]}
                   >
                     <Mentions prefix='$' split=''>
-                      {_.map(variableConfigWithOptions, (item) => {
+                      {_.map(variablesWithOptions, (item) => {
                         return (
                           <Mentions.Option key={item.name} value={item.name}>
                             {item.name}
@@ -168,7 +143,7 @@ function FormCpt(props: IProps, ref) {
                       {(fields, { add, remove }) => (
                         <>
                           <Button
-                            className='mb1'
+                            className='mb-2'
                             style={{ width: '100%' }}
                             onClick={() => {
                               add({});
@@ -195,7 +170,7 @@ function FormCpt(props: IProps, ref) {
                                   ]}
                                 >
                                   <Mentions prefix='$' split='' placeholder={t('panel.base.link.name')}>
-                                    {_.map(variableConfigWithOptions, (item) => {
+                                    {_.map(variablesWithOptions, (item) => {
                                       return (
                                         <Mentions.Option key={item.name} value={item.name}>
                                           {item.name}
@@ -215,7 +190,7 @@ function FormCpt(props: IProps, ref) {
                                   ]}
                                 >
                                   <Mentions prefix='$' split='' style={{ width: 280 }} placeholder={t('panel.base.link.url')}>
-                                    {_.map(variableConfigWithOptions, (item) => {
+                                    {_.map(variablesWithOptions, (item) => {
                                       return (
                                         <Mentions.Option key={item.name} value={item.name}>
                                           {item.name}
@@ -247,7 +222,7 @@ function FormCpt(props: IProps, ref) {
                       tooltip={<Trans ns='dashboard' i18nKey='dashboard:panel.base.link.label_tip' components={{ br: <br /> }} />}
                     >
                       <Mentions prefix='$' split='' rows={3}>
-                        {_.map(variableConfigWithOptions, (item) => {
+                        {_.map(variablesWithOptions, (item) => {
                           return (
                             <Mentions.Option key={item.name} value={item.name}>
                               {item.name}
@@ -263,7 +238,7 @@ function FormCpt(props: IProps, ref) {
                         <Col span={12}>
                           <Form.Item label={t('panel.base.repeatOptions.byVariable')} name='repeat' tooltip={t('panel.base.repeatOptions.byVariableTip')}>
                             <Select allowClear>
-                              {_.map(variableConfigWithOptions, (item) => {
+                              {_.map(variablesWithOptions, (item) => {
                                 return (
                                   <Select.Option key={item.name} value={item.name}>
                                     {item.name}
@@ -293,7 +268,7 @@ function FormCpt(props: IProps, ref) {
               </Panel>
               <Form.Item shouldUpdate={(prevValues, curValues) => !_.isEqual(prevValues.targets, curValues.targets)}>
                 {({ getFieldValue }) => {
-                  return <Options type={getFieldValue('type')} targets={getFieldValue('targets')} chartForm={chartForm} variableConfigWithOptions={variableConfigWithOptions} />;
+                  return <Options type={getFieldValue('type')} targets={getFieldValue('targets')} />;
                 }}
               </Form.Item>
             </Collapse>

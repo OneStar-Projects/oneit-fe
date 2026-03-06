@@ -16,22 +16,8 @@
  */
 import React from 'react';
 import _ from 'lodash';
-
 import './style.less';
 
 export default function Demo() {
-  return (
-    <div
-      style={{
-        padding: 100,
-      }}
-    >
-      <div
-        style={{
-          width: 'max-content',
-          border: '1px solid #ddd',
-        }}
-      ></div>
-    </div>
-  );
+  return <div />;
 }

@@ -31,14 +31,7 @@ export default function index() {
   }, []);
 
   return (
-    <PageLayout
-      title={
-        <Space>
-          {t('title')}
-          <HelpLink src='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/system-configuration/site-settings/' />
-        </Space>
-      }
-    >
+    <PageLayout title={<Space>{t('title')}</Space>} doc='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/system-configuration/site-settings/'>
       <div className='srm'>
         <div>
           <Card>
@@ -56,6 +49,9 @@ export default function index() {
               }}
             >
               <SiteSettingsPlus />
+              <Form.Item name={['site_url']} label={t('site_url')} tooltip={t('site_url_tip')}>
+                <Input />
+              </Form.Item>
               <Form.Item name={['home_page_url']} label={t('home_page_url')} tooltip={t('home_page_url_tip')}>
                 <Input />
               </Form.Item>

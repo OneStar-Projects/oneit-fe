@@ -25,6 +25,9 @@ import moment from 'moment';
 import _ from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { useUpdateEffect } from 'ahooks';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
+
 import { Dashboard as DashboardType } from '@/store/dashboardInterface';
 import { getBusiGroupsDashboards, getBusiGroupsPublicDashboards, cloneDashboard, removeDashboards, getDashboard, updateDashboardPublic } from '@/services/dashboardV2';
 import PageLayout from '@/components/pageLayout';
@@ -33,12 +36,14 @@ import BusinessGroupSideBarWithAll, { getDefaultGidsInDashboard } from '@/compon
 import usePagination from '@/components/usePagination';
 import { getDefaultColumnsConfigs, ajustColumns } from '@/components/OrganizeColumns';
 import { getBusiGroups } from '@/components/BusinessGroup';
+
 import { defaultColumnsConfigs, LOCAL_STORAGE_KEY } from './constants';
 import Header from './Header';
 import FormModal from './FormModal';
 import Export from './Export';
 import { exportDataStringify } from './utils';
 import PublicForm from './PublicForm';
+
 import './style.less';
 
 const N9E_GIDS_LOCALKEY = 'N9E_BOARD_NODE_ID';
@@ -53,7 +58,8 @@ const getDefaultPublicSelectGids = (localKey: string) => {
 export default function index() {
   const { t } = useTranslation('dashboard');
   const { businessGroup, perms } = useContext(CommonStateContext);
-  const [gids, setGids] = useState<string | undefined>(getDefaultGidsInDashboard(N9E_GIDS_LOCALKEY, businessGroup));
+  const queryParams = queryString.parse(useLocation().search);
+  const [gids, setGids] = useState<string | undefined>(getDefaultGidsInDashboard(queryParams, N9E_GIDS_LOCALKEY, businessGroup));
   const [list, setList] = useState<any[]>([]);
   const [selectRowKeys, setSelectRowKeys] = useState<number[]>([]);
   const [refreshKey, setRefreshKey] = useState(_.uniqueId('refreshKey_'));
@@ -102,7 +108,7 @@ export default function index() {
   }, []);
 
   return (
-    <PageLayout title={t('title')} icon={<FundViewOutlined />}>
+    <PageLayout title={t('title')} icon={<FundViewOutlined />} doc='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v8/quickstart/dashboard/'>
       <div style={{ display: 'flex' }}>
         <BusinessGroupSideBarWithAll
           gids={gids}
@@ -113,7 +119,7 @@ export default function index() {
           allOptionLabel={t('default_filter.all')}
           allOptionTooltip={t('default_filter.all_tip')}
         />
-        <div className='n9e-border-base dashboards-v2'>
+        <div className='fc-border dashboards-v2'>
           <Header
             gids={gids}
             selectRowKeys={selectRowKeys}
@@ -134,7 +140,7 @@ export default function index() {
             }}
           />
           <Table
-            className='mt8'
+            className='mt-2'
             dataSource={data}
             columns={ajustColumns(
               _.concat(
@@ -204,14 +210,24 @@ export default function index() {
                     ),
                   },
                   {
+                    title: t('common:table.note'),
+                    dataIndex: 'note',
+                    className: 'note-column',
+                  },
+                  {
                     title: t('common:table.update_at'),
                     width: 150,
                     dataIndex: 'update_at',
                     render: (text: number) => moment.unix(text).format('YYYY-MM-DD HH:mm:ss'),
                   },
                   {
-                    title: t('common:table.update_by'),
+                    title: t('common:table.username'),
                     dataIndex: 'update_by',
+                    width: 100,
+                  },
+                  {
+                    title: t('common:table.nickname'),
+                    dataIndex: 'update_by_nickname',
                     width: 100,
                   },
                   {
@@ -306,7 +322,7 @@ export default function index() {
                                 <Menu.Item>
                                   <Button
                                     type='link'
-                                    className='p0 height-auto'
+                                    className='p-0 h-auto'
                                     onClick={() => {
                                       FormModal({
                                         action: 'edit',
@@ -326,7 +342,7 @@ export default function index() {
                                 <Menu.Item>
                                   <Button
                                     type='link'
-                                    className='p0 height-auto'
+                                    className='p-0 h-auto'
                                     onClick={async () => {
                                       Modal.confirm({
                                         title: t('common:confirm.clone'),
@@ -347,7 +363,7 @@ export default function index() {
                               <Menu.Item>
                                 <Button
                                   type='link'
-                                  className='p0 height-auto'
+                                  className='p-0 h-auto'
                                   onClick={async () => {
                                     const exportData = await getDashboard(record.id);
                                     Export({
@@ -363,7 +379,7 @@ export default function index() {
                                   <Button
                                     danger
                                     type='link'
-                                    className='p0 height-auto'
+                                    className='p-0 h-auto'
                                     onClick={async () => {
                                       Modal.confirm({
                                         title: t('common:confirm.delete'),

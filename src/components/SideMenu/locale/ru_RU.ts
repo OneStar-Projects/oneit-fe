@@ -36,7 +36,8 @@ const ru_RU = {
     notification_rules: 'Правила уведомлений',
     notification_channels: 'Каналы уведомлений',
     notification_templates: 'Шаблоны уведомлений',
-    event_pipeline: 'Конвейер событий',
+    event_pipeline: 'Рабочий процесс',
+    event_pipeline_executions: 'Записи выполнения',
     notification_settings: 'Настройка уведомлений',
     notification_tpls: 'Шаблоны',
     integrations: 'Интеграции',
@@ -56,6 +57,7 @@ const ru_RU = {
     audit_log: 'Журнал аудита',
     alert_servers: 'Система оповещений',
     about: 'О продукте',
+    license_management: 'Управление лицензиями',
   },
 };
 

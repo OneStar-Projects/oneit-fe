@@ -40,7 +40,7 @@ const zh_HK = {
       time_sort_asc: '時間升序',
       all: '全部',
       custom: '自定義',
-      custom_validated: '日誌數量必須在1-65535之间',
+      custom_validated: '數量不能超過{{maxCount}}',
       all_quantity: '总数約',
       createSuccess: '任務創建成功',
     },
@@ -58,11 +58,19 @@ const zh_HK = {
       del_btn_tips: '確認刪除嗎?',
       del_btn: '刪除',
       emptyText: '暫無導出記錄，請點擊查詢日誌，然後點擊下載',
+      size: '文件大小',
+      reload_btn_tip: '刷新',
     },
     field_actions: {
       and: '添加到本次檢索',
       not: '從本次檢索中排除',
       exists: '過濾存在該欄位的文檔',
+    },
+    field_values_topn: {
+      label: '前 {{n}} 個值',
+      settings: {
+        title: '前 N 個值設置',
+      },
     },
   },
   historicalRecords: {
@@ -74,6 +82,69 @@ const zh_HK = {
   help: '使用說明',
   clear_tabs: '清空',
   clear_tabs_tip: '只保留當前標籤頁',
+  stats: {
+    unique_count: '唯一值個數',
+    min: '最小值',
+    max: '最大值',
+    sum: '求和',
+    avg: '平均值',
+    topn_no_data: '無數據',
+    unindexable: '欄位未開啟統計，無法進行統計分析',
+  },
+  field_list: {
+    show_fields: '顯示欄位',
+    available_fields: '可用欄位',
+  },
+  empty_value_not_supported_tip: '不支持空值查詢',
+  logs: {
+    title: '日誌詳情',
+    count: '結果數',
+    filter_fields: '篩選字段',
+    settings: {
+      mode: {
+        origin: '原始',
+        table: '表格',
+      },
+      breakLine: '換行',
+      reverse: '時間',
+      lines: '行號',
+      time: '日誌時間',
+      organizeFields: {
+        title: '字段列設置',
+        allFields: '可用字段',
+        showFields: '顯示字段',
+        showFields_empty: '日誌默認顯示全部字段',
+      },
+      jsonSettings: {
+        title: 'JSON 設置',
+        displayMode: '默認展示類型',
+        displayMode_tree: '樹形展示',
+        displayMode_string: '字符串展示',
+        expandLevel: '默認展開層級',
+      },
+      pageLoadMode: {
+        title: '翻頁模式',
+        pagination: '分頁器',
+        infiniteScroll: '滾動加載更多',
+      },
+    },
+    tagsDetail: 'Tag 詳情',
+    expand: '展開',
+    collapse: '收起',
+    fieldValues_topnNoData: '無數據',
+    stats: {
+      numberOfUniqueValues: '唯一值個數',
+      min: '最小值',
+      max: '最大值',
+      sum: '求和',
+      avg: '平均值',
+    },
+    fieldLabelTip: '字段未開啟統計，無法進行統計分析',
+    filterAnd: '添加到本次檢索',
+    filterNot: '從本次檢索中排除',
+    total: '日誌條數',
+    stack_group_by_tip: '以此字段值展示堆疊趨勢圖',
+  },
 };
 
 export default zh_HK;

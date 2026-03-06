@@ -28,7 +28,7 @@ import { AccessTokenKey, IS_ENT, IS_PLUS } from '@/utils/constant';
 import DarkModeSelect from '@/components/DarkModeSelect';
 import { findMenuByPath, getCurrentMenuList } from '@/components/SideMenu/utils';
 import { MenuMatchResult } from '@/components/SideMenu/types';
-
+import DocLink from './DocLink';
 import { TabMenu } from './TabMenu';
 import LanguageIcon from '../icons/LanguageIcon';
 import DocIcon from '../icons/DocIcon';
@@ -52,7 +52,7 @@ interface IPageLayoutProps {
   customArea?: ReactNode;
   showBack?: Boolean;
   backPath?: string;
-  docFn?: Function;
+  doc?: string;
   tabGroup?: string;
 }
 
@@ -64,12 +64,12 @@ const i18nMap = {
   ru_RU: 'Русский',
 };
 
-const PageLayout: React.FC<IPageLayoutProps> = ({ icon, title, rightArea, introIcon, children, customArea, showBack, backPath, docFn, tabGroup }) => {
+const PageLayout: React.FC<IPageLayoutProps> = ({ icon, title, rightArea, introIcon, children, customArea, showBack, backPath, doc, tabGroup }) => {
   const { t, i18n } = useTranslation('pageLayout');
   const history = useHistory();
   const location = useLocation();
   const query = querystring.parse(location.search);
-  const { profile, siteInfo } = useContext(CommonStateContext);
+  const { profile, siteInfo, i18nList } = useContext(CommonStateContext);
   const embed = localStorage.getItem('embed') === '1' && window.self !== window.top;
   const [themeVisible, setThemeVisible] = useState(false);
   const [currentMenu, setCurrentMenu] = useState<MenuMatchResult | null>(null);
@@ -150,9 +150,9 @@ const PageLayout: React.FC<IPageLayoutProps> = ({ icon, title, rightArea, introI
                   display: query.viewMode === 'fullscreen' ? 'none' : 'flex',
                 }}
               >
-                <div className='flex gap-4 align-center'>
+                <div className='flex items-center min-w-0 flex-1'>
                   {!currentMenu?.parentItem?.label && (
-                    <div className={'page-header-title'}>
+                    <div className='page-header-title min-w-0'>
                       {showBack && window.history.state && (
                         <RollbackOutlined
                           onClick={() => {
@@ -171,15 +171,11 @@ const PageLayout: React.FC<IPageLayoutProps> = ({ icon, title, rightArea, introI
                     </div>
                   )}
                   <TabMenu currentMenu={currentMenu} />
+                  {IS_ENT && doc && <DocLink link={doc} />}
                 </div>
 
-                <div className={'page-header-right-area'} style={{ display: sessionStorage.getItem('menuHide') === '1' ? 'none' : undefined }}>
-                  {introIcon}
-                  {docFn && (
-                    <a onClick={() => docFn()} style={{ marginRight: 16 }}>
-                      {t('docs')}
-                    </a>
-                  )}
+                <div className={'page-header-right-area flex-shrink-0'} style={{ display: sessionStorage.getItem('menuHide') === '1' ? 'none' : undefined }}>
+                  <span className='page-layout-intro-container'>{introIcon}</span>
                   <Version />
 
                   <Space className='mr-2'>{rightArea}</Space>
@@ -221,13 +217,17 @@ const PageLayout: React.FC<IPageLayoutProps> = ({ icon, title, rightArea, introI
                         }}
                         selectable
                       >
-                        {Object.keys(i18nMap).map((el) => {
-                          return <Menu.Item key={el}>{i18nMap[el]}</Menu.Item>;
-                        })}
+                        {Object.keys(i18nMap)
+                          .filter((el) => {
+                            return i18nList ? i18nList.includes(el) : true;
+                          })
+                          .map((el) => {
+                            return <Menu.Item key={el}>{i18nMap[el]}</Menu.Item>;
+                          })}
                       </Menu>
                     }
                   >
-                    <Button size='small' type='text' style={{ marginLeft: 12 }}>
+                    <Button size='small' type='text' style={{ marginLeft: 12 }} id='i18n-btn'>
                       <LanguageIcon className='text-[12px]' />
                     </Button>
                   </Dropdown>
@@ -243,6 +243,7 @@ const PageLayout: React.FC<IPageLayoutProps> = ({ icon, title, rightArea, introI
                     </span>
                   </Dropdown>
                 </div>
+                {sessionStorage.getItem('menuHide') === '1' && <Space className='mr-2'>{rightArea}</Space>}
               </div>
             </div>
           )}

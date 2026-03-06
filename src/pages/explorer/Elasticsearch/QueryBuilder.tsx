@@ -156,7 +156,7 @@ export default function QueryBuilder(props: Props) {
                       darkMode,
                       title: t('common:page_help'),
                       type: 'iframe',
-                      documentPath: 'https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/log-analysis/open-source/elasticserch/',
+                      documentPath: 'https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/log-analysis/elasticserch/',
                     });
                   }}
                 />
@@ -164,7 +164,7 @@ export default function QueryBuilder(props: Props) {
             </>
           }
           addonAfter={
-            <Form.Item name={['query', 'syntax']} noStyle initialValue='lucene'>
+            <Form.Item name={['query', 'syntax']} noStyle initialValue='kuery'>
               <Select
                 bordered={false}
                 options={SYNTAX_OPTIONS}

@@ -43,6 +43,7 @@ const ja_JP = {
     card_title: 'アラートイベント詳細',
     buisness_not_exist: 'このビジネスグループは削除されたか、またはビューの権限がありません',
     rule_name: 'ルールタイトル',
+    hash: 'Hash',
     group_name: 'ビジネスグループ',
     rule_note: 'ルール備考',
     cate: 'データソースタイプ',
@@ -87,10 +88,15 @@ const ja_JP = {
       detail: '結果詳細',
       sub_id: 'ルールID',
       notify_rule_id: '通知ルール ID',
+      alert_aggr_events_link: '集約イベント',
     },
     task_tpls: {
       label: '自動回復テンプレート',
     },
+    step_tip: 'グラフの時間間隔、単位は秒',
+    query_label: 'クエリ条件',
+    trigger_label: 'アラート条件',
+    current_anomaly_time: '今回の異常時間',
   },
 
   sharing_link: {

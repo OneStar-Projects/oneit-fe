@@ -7,26 +7,30 @@ import { ChannelItem } from '@/pages/notificationChannels/types';
 import UserInfo from './UserInfo';
 import Flashduty from './Flashduty';
 import Custom from './Custom';
+import PagerDuty from './Pagerduty';
 
 interface Props {
+  prefixNamePath?: (string | number)[];
   field: FormListFieldData;
   channelItem?: ChannelItem;
 }
 
 export default function index(props: Props) {
-  const { field, channelItem } = props;
+  const { prefixNamePath, field, channelItem } = props;
   const request_type = channelItem?.request_type;
   const contactKey = channelItem?.param_config?.user_info?.contact_key;
   const customParams = channelItem?.param_config?.custom?.params ?? [];
 
   if (request_type === 'flashduty') {
     return <Flashduty field={field} channelItem={channelItem} />;
+  } else if (request_type === 'pagerduty') {
+    return <PagerDuty field={field} channelItem={channelItem} />;
   }
 
   return (
     <>
-      {contactKey && <UserInfo field={field} />}
-      <Custom field={field} customParams={customParams} />
+      {contactKey && <UserInfo prefixNamePath={prefixNamePath} field={field} />}
+      <Custom prefixNamePath={prefixNamePath} field={field} customParams={customParams} />
     </>
   );
 }

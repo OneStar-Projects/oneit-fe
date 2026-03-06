@@ -184,7 +184,7 @@ export default function index(props: Props) {
                     <Button
                       danger
                       type='link'
-                      className='p0 height-auto'
+                      className='p-0 h-auto'
                       onClick={() => {
                         Modal.confirm({
                           title: t('common:confirm.delete'),
@@ -227,7 +227,9 @@ export default function index(props: Props) {
   );
 
   useEffect(() => {
-    getCollectors().then((res) => {
+    getCollectors({
+      typ: component,
+    }).then((res) => {
       setCollectorsList(res);
     });
     getMenuPerm().then((res) => {
@@ -243,7 +245,7 @@ export default function index(props: Props) {
   return (
     <>
       <div
-        className='mb8'
+        className='mb-2'
         style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -305,7 +307,7 @@ export default function index(props: Props) {
           />
         </Space>
         <Space>
-          <HelpLink src='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/template-center/open-source/-indicator-template/' />
+          <HelpLink src='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/integration/built-in-metric-template/' />
           {actionAuth.add && (
             <FormModal
               component={component}
@@ -411,7 +413,7 @@ export default function index(props: Props) {
         </Space>
       </div>
       <Table
-        className='mt8'
+        className='mt-2'
         size='small'
         rowKey='id'
         {...tableProps}

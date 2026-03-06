@@ -190,7 +190,7 @@ export function getLogsQuery(datasourceValue: number, requestBody: any, requestI
       const dat = _.get(res, 'responses[0].hits');
       const { docs } = flattenHits(dat.hits);
       return {
-        total: dat.total.value,
+        total: dat.total.value ?? dat.total,
         list: docs,
       };
     })
@@ -223,7 +223,7 @@ export function getESVersion(datasourceValue: number) {
   });
 }
 
-export function getFieldValues(datasourceValue, requestBody, field) {
+export function getFieldValues(datasourceValue, requestBody, field, n = 5) {
   return request(`/api/${N9E_PATHNAME}/proxy/${datasourceValue}/_msearch`, {
     method: RequestMethod.Post,
     data: requestBody,
@@ -253,7 +253,7 @@ export function getFieldValues(datasourceValue, requestBody, field) {
         ['desc'],
       ),
       0,
-      5,
+      n,
     );
   });
 }

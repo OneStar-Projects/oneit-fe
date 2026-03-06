@@ -20,7 +20,7 @@ const zh_HK = {
   inhibit_tip: '只有 metricName 和 labels 完全相同的曲線產生的告警事件，才會進行級別抑制，1級>2級>3級',
   interval: '執行頻率',
   duration: '持續時長',
-  severity_label: '觸發告警',
+  severity_label: '告警分級',
   prom_eval_interval: '執行頻率 (s)',
   prom_for_duration: '持續時長 (s)',
   effective_configs: '生效配置',
@@ -31,8 +31,13 @@ const zh_HK = {
   effective_time_end: '結束時間',
   effective_time_end_msg: '結束時間不能為空',
   effective_time_week_msg: '請選擇生效週期',
+  effective_time_tip: '00:00-00:00 和 00:00-23:59 都表示全天生效',
   enable_in_bg: '僅在本業務組生效',
-  enable_in_bg_tip: '根據告警事件中的 ident 歸屬關係判斷，即：如果告警事件中有 ident 標籤且 ident 對應的機器不屬於該業務組，則丟棄此告警事件',
+  enable_in_bg_tip: '若告警事件中包含 ident 標籤，且對應的機器不屬於本業務組，則丟棄該告警事件；若告警事件中不包含 ident 標籤，則此過濾條件不生效，會繼續後續處理。',
+  time_zone: '時區',
+  time_zone_tip: '時區僅影響規則中的開始時間、結束時間，不影響告警事件查看相關時間字段',
+  local_time: '本地時間',
+
   notify_configs: '通知配置',
   notify_rule_ids: '通知規則',
   switch_to_old: '切換舊版',
@@ -159,6 +164,7 @@ const zh_HK = {
         annotations: '附加資訊',
         triggers: '告警條件',
         cron_pattern: '執行頻率',
+        time_zone: '時區',
       },
     },
     cloneToHosts: {
@@ -223,7 +229,7 @@ const zh_HK = {
     disabled: '啟用',
     severity: '級別',
     status: '狀態',
-    status_tip: '告警規則目前是否觸發了告警事件，預設統計最近 30 天的資料',
+    status_tip: '告警規則目前是否觸發了告警事件，只會統計展示最近30天的數據',
   },
   expired: '告警規則已經被別人修改，為避免相互覆蓋，請刷新頁面查看最新配置',
   relabel: {
@@ -335,6 +341,11 @@ const zh_HK = {
   },
   enrich: {
     select_tip: '克隆查詢條件（留空表示直接創建，不克隆）',
+  },
+  pipeline_configuration: {
+    title: '事件處理工作流',
+    name_placeholder: '請選擇事件處理工作流',
+    add_btn: '添加事件處理工作流',
   },
 };
 

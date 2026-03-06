@@ -23,10 +23,9 @@ import { useTranslation } from 'react-i18next';
 
 import { SIZE } from '@/utils/constant';
 import TimeRangePicker, { IRawTimeRange } from '@/components/TimeRangePicker';
-import { Dashboard } from '@/store/dashboardInterface';
 import { CommonStateContext } from '@/App';
 
-import { IVariable } from '../VariableConfig';
+import { DASHBOARD_VERSION } from '../config';
 import { visualizations, defaultValues, defaultCustomValuesMap, defaultOptionsValuesMap } from './config';
 import FormCpt from './Form';
 import { IPanel } from '../types';
@@ -40,22 +39,20 @@ interface IProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   initialValues: IPanel;
-  variableConfig?: IVariable[];
   id: string; // panel id
-  dashboardId: string;
   time: IRawTimeRange;
   timezone: string;
   setTimezone: (timezone: string) => void;
   onOK: (formData: any, mode: string) => void;
   onCancel?: () => void;
-  dashboard: Dashboard;
+  editModalVariablecontainerRef: React.RefObject<HTMLDivElement>;
 }
 
 function index(props: IProps) {
   const { t } = useTranslation('dashboard');
   const { groupedDatasourceList } = useContext(CommonStateContext);
   const formRef = useRef<any>();
-  const { panelWidth, mode, visible, setVisible, variableConfig, id, dashboardId, time, dashboard, timezone, setTimezone } = props;
+  const { panelWidth, mode, visible, setVisible, id, time, timezone, setTimezone } = props;
   const [initialValues, setInitialValues] = useState<IPanel>(_.cloneDeep(props.initialValues));
   const [range, setRange] = useState<IRawTimeRange>(time);
   const handleAddChart = async () => {
@@ -67,7 +64,7 @@ function index(props: IProps) {
           _.set(values, 'custom.colorRange', _.split(values.custom.colorRange, ','));
         }
         let formData = Object.assign(values, {
-          version: '3.1.0',
+          version: DASHBOARD_VERSION,
         });
         if (values && values.id) {
           formData.id = values.id;
@@ -115,7 +112,19 @@ function index(props: IProps) {
                   _.set(valuesCopy, 'type', val);
                   _.set(valuesCopy, 'custom', defaultCustomValuesMap[val]);
                   _.set(valuesCopy, 'options', defaultOptionsValuesMap[val]);
-                  _.set(valuesCopy, 'targets', valuesCopy.targets || [{ refId: 'A' }]);
+                  _.set(
+                    valuesCopy,
+                    'targets',
+                    valuesCopy.targets
+                      ? _.map(valuesCopy.targets, (item) => {
+                          // 如果切换到时序图类型，但是面板的查询配置里的模式不是时序图数据，则切换到时序图模式
+                          if (val === 'timeseries' && item.query?.mode && item.query?.mode !== 'timeSeries') {
+                            return { ...item, query: { ...item.query, mode: 'timeSeries' } };
+                          }
+                          return item;
+                        })
+                      : [{ refId: 'A' }],
+                  );
                   _.set(valuesCopy, 'datasourceCate', valuesCopy.datasourceCate || 'prometheus');
                   _.set(valuesCopy, 'datasourceValue', valuesCopy.datasourceValue || groupedDatasourceList['prometheus'][0]?.id);
                   // 清空 overrides
@@ -193,14 +202,12 @@ function index(props: IProps) {
         <FormCpt
           ref={formRef}
           initialValues={normalizeInitialValues(initialValues)}
-          variableConfig={variableConfig}
           range={range}
           timezone={timezone}
           id={id}
-          dashboardId={dashboardId}
           key={initialValues.type} // 每次切换图表类型，都重新渲染
-          dashboard={dashboard}
           panelWidth={panelWidth}
+          editModalVariablecontainerRef={props.editModalVariablecontainerRef}
         />
       )}
     </Modal>

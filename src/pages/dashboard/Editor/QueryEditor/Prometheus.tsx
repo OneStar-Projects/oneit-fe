@@ -1,27 +1,30 @@
 import React from 'react';
-import { Form, Row, Col, Input, Switch, InputNumber, Space, Tag, Tooltip } from 'antd';
+import { Form, Row, Col, Input, Switch, Space, Tag, Tooltip } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import _ from 'lodash';
-import moment from 'moment';
 import { useTranslation, Trans } from 'react-i18next';
-import TimeRangePicker, { isMathString } from '@/components/TimeRangePicker';
+
+import { alphabet } from '@/utils/constant';
 import Resolution from '@/components/Resolution';
 import PromQLInputNG, { interpolateString } from '@/components/PromQLInputNG';
 import { getRealStep } from '@/pages/dashboard/Renderer/datasource/prometheus';
-import HideButton from '@/pages/dashboard/Components/HideButton';
-import { alphabet } from '@/utils/constant';
+import QueryExtraActions from '@/pages/dashboard/Components/QueryExtraActions';
+import { useGlobalState } from '@/pages/dashboard/globalState';
+
 import Collapse, { Panel } from '../Components/Collapse';
 import ExpressionPanel from '../Components/ExpressionPanel';
 import AddQueryButtons from '../Components/AddQueryButtons';
 
-export default function Prometheus({ panelWidth, variableConfig, time, datasourceValue }) {
+export default function Prometheus({ panelWidth, datasourceValue, range }) {
   const { t } = useTranslation('dashboard');
-  const varNams = _.map(variableConfig, (item) => {
+  const [variablesWithOptions] = useGlobalState('variablesWithOptions');
+  const varNams = _.map(variablesWithOptions, (item) => {
     return `$${item.name}`;
   });
-  const chartForm = Form.useFormInstance();
   const targets = Form.useWatch('targets');
   const chartType = Form.useWatch('type');
+  const maxDataPoints = Form.useWatch('maxDataPoints');
+  const queryOptionsTime = Form.useWatch('queryOptionsTime');
 
   return (
     <Form.List name='targets'>
@@ -40,7 +43,12 @@ export default function Prometheus({ panelWidth, variableConfig, time, datasourc
                       <Form.Item noStyle shouldUpdate>
                         {({ getFieldValue }) => {
                           const target = getFieldValue(['targets', field.name]);
-                          const step = getRealStep(time, target);
+                          const step = getRealStep({
+                            time: queryOptionsTime || range,
+                            maxDataPoints,
+                            panelWidth: panelWidth,
+                            minStep: target?.step,
+                          });
                           const name = target?.refId || alphabet[index];
                           return (
                             <Space>
@@ -58,9 +66,7 @@ export default function Prometheus({ panelWidth, variableConfig, time, datasourc
                     key={field.key}
                     extra={
                       <Space>
-                        <Form.Item noStyle {...field} name={[field.name, 'hide']}>
-                          <HideButton />
-                        </Form.Item>
+                        <QueryExtraActions field={field} add={add} />
                         {fields.length > 1 ? (
                           <DeleteOutlined
                             onClick={() => {
@@ -76,7 +82,7 @@ export default function Prometheus({ panelWidth, variableConfig, time, datasourc
                     </Form.Item>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <Form.Item
-                        label='PromQL'
+                        label={t('query.prometheus.query')}
                         tooltip={{
                           overlayInnerStyle: { width: 330 },
                           title: <Trans ns='dashboard' i18nKey='dashboard:var.help_tip' components={{ 1: <br /> }} />,
@@ -101,7 +107,7 @@ export default function Prometheus({ panelWidth, variableConfig, time, datasourc
                           interpolateString={(query) => {
                             return interpolateString({
                               query,
-                              range: time,
+                              range: range,
                               minStep: targets?.[field.name]?.step,
                             });
                           }}
@@ -112,7 +118,7 @@ export default function Prometheus({ panelWidth, variableConfig, time, datasourc
                       {chartType !== 'tableNG' && (
                         <Col flex='auto'>
                           <Form.Item
-                            label='Legend'
+                            label={t('query.legend')}
                             {...field}
                             name={[field.name, 'legend']}
                             tooltip={{
@@ -126,49 +132,19 @@ export default function Prometheus({ panelWidth, variableConfig, time, datasourc
                           </Form.Item>
                         </Col>
                       )}
-                      <Col flex='116px'>
+                      <Col flex='none'>
+                        <Form.Item label={t('query.prometheus.minStep.label')} tooltip={t('query.prometheus.minStep.tip')} {...field} name={[field.name, 'step']}>
+                          <Resolution placeholder='15' width='100%' />
+                        </Form.Item>
+                      </Col>
+                      <Col flex='none'>
                         <Form.Item
-                          label={t('query.time')}
+                          label={t('query.prometheus.instant.label')}
+                          tooltip={t('query.prometheus.instant.tip')}
                           {...field}
-                          name={[field.name, 'time']}
-                          tooltip={{
-                            getPopupContainer: () => document.body,
-                            title: t('query.time_tip'),
-                          }}
-                          normalize={(val) => {
-                            if (val === undefined || val === null || val === '') return undefined;
-                            return {
-                              start: isMathString(val.start) ? val.start : moment(val.start).format('YYYY-MM-DD HH:mm:ss'),
-                              end: isMathString(val.end) ? val.end : moment(val.end).format('YYYY-MM-DD HH:mm:ss'),
-                            };
-                          }}
+                          name={[field.name, 'instant']}
+                          valuePropName='checked'
                         >
-                          <TimeRangePicker
-                            dateFormat='YYYY-MM-DD HH:mm:ss'
-                            allowClear
-                            onClear={() => {
-                              const targets = chartForm.getFieldValue('targets');
-                              const targetsClone = _.cloneDeep(targets);
-                              _.set(targetsClone, [field.name, 'time'], undefined);
-                              chartForm.setFieldsValue({
-                                targets: targetsClone,
-                              });
-                            }}
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col flex='120px'>
-                        <Form.Item label='Max data points' tooltip={t('query.prometheus.maxDataPoints.tip')} {...field} name={[field.name, 'maxDataPoints']}>
-                          <InputNumber style={{ width: '100%' }} placeholder={panelWidth ?? 240} min={1} />
-                        </Form.Item>
-                      </Col>
-                      <Col flex='72px'>
-                        <Form.Item label='Min step' tooltip={t('query.prometheus.minStep.tip')} {...field} name={[field.name, 'step']}>
-                          <Resolution placeholder='15' />
-                        </Form.Item>
-                      </Col>
-                      <Col flex='72px'>
-                        <Form.Item label='Instant' {...field} name={[field.name, 'instant']} valuePropName='checked'>
                           <Switch />
                         </Form.Item>
                       </Col>

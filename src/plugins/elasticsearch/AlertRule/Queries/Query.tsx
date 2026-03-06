@@ -58,7 +58,7 @@ export default function Query(props: Props) {
   }, [datasourceValue, indexPatternsRefreshFlag]);
 
   return (
-    <div key={field.key} className='n9e-fill-color-3 p2 mb2' style={{ position: 'relative' }}>
+    <div key={field.key} className='bg-fc-200 p-4 mb-4' style={{ position: 'relative' }}>
       <Row gutter={8}>
         <Col flex='32px'>
           <Form.Item {...field} name={[field.name, 'ref']} initialValue='A'>
@@ -146,8 +146,7 @@ export default function Query(props: Props) {
                             darkMode,
                             title: t('common:page_help'),
                             type: 'iframe',
-                            documentPath:
-                              'https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/alarm-management/alert-rules/rule-configuration/business/es-alarm-rules/',
+                            documentPath: 'https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/alert/alert-rules/query-data/es/',
                           });
                         }}
                       />
@@ -169,7 +168,7 @@ export default function Query(props: Props) {
             <Col span={5}>
               <Input.Group>
                 <span className='ant-input-group-addon'>{t('datasource:es.interval')}</span>
-                <Form.Item {...field} name={[field.name, 'interval']} noStyle>
+                <Form.Item {...field} name={[field.name, 'interval']} noStyle initialValue={1}>
                   <InputNumber disabled={disabled} style={{ width: '100%' }} min={0} />
                 </Form.Item>
                 <span className='ant-input-group-addon'>

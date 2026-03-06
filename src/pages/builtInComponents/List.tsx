@@ -18,6 +18,10 @@ import AgentTemplateManagement from './components/AgentTemplateManagement';
 import DeploymentManagement from './components/DeploymentManagement';
 import { getComponents, Component, deleteComponents, putComponent } from './services';
 import ComponentFormModal from './components/ComponentFormModal';
+import { IS_ENT } from '@/utils/constant';
+
+// @ts-ignore
+import Firemap from 'plus:/parcels/builtInComponents/Firemap';
 
 const LIST_SEARCH_VALUE = 'builtin-list-search-value';
 const BUILT_IN_ACTIVE_TAB_KEY = 'builtin-drawer-active-tab';
@@ -57,7 +61,7 @@ export default function index() {
     <PageLayout title={t('title')} icon={<SafetyCertificateOutlined />}>
       <div>
         <div style={{ background: 'unset' }}>
-          <div className='mb2' style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className='mb-4' style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Input
               prefix={<SearchOutlined />}
               style={{ width: 300 }}
@@ -115,7 +119,7 @@ export default function index() {
                           <Button
                             size='small'
                             type='link'
-                            className='p0'
+                            className='p-0'
                             onClick={(e) => {
                               e.stopPropagation();
                               ComponentFormModal({
@@ -135,7 +139,7 @@ export default function index() {
                             size='small'
                             type='link'
                             danger
-                            className='p0'
+                            className='p-0'
                             icon={<DeleteOutlined />}
                             onClick={(e) => {
                               e.stopPropagation();
@@ -285,6 +289,11 @@ export default function index() {
             <Tabs.TabPane tab={t('tab_deploymentManagement')} key='tab_deploymentManagement'>
               <DeploymentManagement component={activeComponent} />
             </Tabs.TabPane>
+            {IS_ENT && (
+              <Tabs.TabPane tab={t('tab_firemap')} key='tab_firemap'>
+                <Firemap component_id={activeComponent.id} />
+              </Tabs.TabPane>
+            )}
           </Tabs>
         )}
       </Drawer>

@@ -78,6 +78,8 @@ export interface ITimeRangePickerProps {
   showTimezone?: boolean; // 是否显示时区选择
   timezone?: string; // 时区值，默认值为当前时区
   onTimezoneChange?: (value: string) => void;
+  showSecond?: boolean; // 是否显示秒选择，默认不显示
+  onVisibleChange?: (visible: boolean) => void;
 }
 
 export interface ITimeRangePickerWithRefreshProps extends ITimeRangePickerProps {

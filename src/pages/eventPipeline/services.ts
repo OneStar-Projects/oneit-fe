@@ -3,9 +3,9 @@ import _ from 'lodash';
 import request from '@/utils/request';
 import { RequestMethod } from '@/store/common';
 
-import { Item } from './types';
+import { Item, ExecutionItem } from './types';
 
-export type { Item };
+export type { Item, ExecutionItem };
 
 export const getList = function (): Promise<Item[]> {
   return request('/api/n9e/event-pipelines', {
@@ -52,4 +52,48 @@ export const eventPipelineTryrun = function (data: { event_id: number; pipeline_
     method: RequestMethod.Post,
     data,
   });
+};
+
+export function getEventTagKeys() {
+  return request('/api/n9e/event-tagkeys', {
+    method: RequestMethod.Get,
+  }).then((res) => {
+    return res.dat;
+  });
+}
+
+export function getEventTagValues(key: string) {
+  return request('/api/n9e/event-tagvalues', {
+    method: RequestMethod.Get,
+    params: { key },
+  }).then((res) => {
+    return res.dat;
+  });
+}
+
+export function getEventEnrichDataPreview(data: { cate: string; config: Record<string, any>; event_id: number }) {
+  return request('/api/n9e-plus/event-enrich-data-preview', {
+    method: RequestMethod.Post,
+    data,
+    silence: true,
+  }).then((res) => {
+    return res.dat;
+  });
+}
+
+export const getExecutions = function (params): Promise<{
+  list: ExecutionItem[];
+  total: number;
+}> {
+  return request('/api/n9e/event-pipeline-executions', {
+    method: RequestMethod.Get,
+    params,
+  }).then((res) => res.dat);
+};
+
+export const getExecutionById = function (id: string): Promise<ExecutionItem> {
+  return request(`/api/n9e/event-pipeline-execution/${id}`, {
+    method: RequestMethod.Get,
+    params: { exec_id: id },
+  }).then((res) => res.dat);
 };

@@ -50,7 +50,7 @@ export interface ITargetProps {
   ident: string;
   note: string;
   tags: string[];
-  update_at: number;
+  beat_time: number;
 }
 
 interface IProps {
@@ -435,8 +435,7 @@ export default function List(props: IProps) {
             </Tooltip>
           </Space>
         ),
-        sorter: true,
-        dataIndex: 'update_at',
+        dataIndex: 'beat_time',
         render: (val, reocrd) => {
           let result = moment.unix(val).format('YYYY-MM-DD HH:mm:ss');
           let backgroundColor = GREEN_COLOR;
@@ -665,7 +664,7 @@ export default function List(props: IProps) {
         </Space>
       </div>
       <Table
-        className='mt8 n9e-hosts-table'
+        className='mt-2 n9e-hosts-table'
         rowKey='id'
         columns={columns}
         size='small'
@@ -701,7 +700,7 @@ export default function List(props: IProps) {
                           language: i18n.language,
                           darkMode,
                           title: t('categraf_doc'),
-                          documentPath: '/docs/categraf',
+                          documentPath: '/n9e-docs/categraf',
                         });
                       }}
                     />

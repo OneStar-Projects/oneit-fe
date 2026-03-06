@@ -33,6 +33,7 @@ const zh_CN = {
     disabled: '停用中',
   },
   form: {
+    advanced_settings: '高级设置',
     other: '其他',
     name: '名称',
     name_msg: '请输入字母/数字/下划线，必须以字母开头',
@@ -54,8 +55,12 @@ const zh_CN = {
     cluster_confirm_ok: '不做关联',
     cluster_confirm_cancel: '去做关联',
     cluster_not_found: '关联告警引擎已停用，当前数据源的告警不再生效。请检查告警引擎配置或重新修改数据源关联的告警引擎',
-    url_no_spaces_msg: 'URL不能包含空格',
-    url_required_msg: 'URL不能为空',
+    protocol: '协议',
+    secure_connection: '安全连接（SSL/TLS）',
+    url_no_spaces_msg: 'URL 不能包含空格',
+    url_no_http_msg: 'URL 不能以 http:// 或 https:// 开头',
+    url_required_msg: 'URL 不能为空',
+    logs_max_query_rows: '返回的最大日志条数',
     prom: {
       write_addr_tip: '记录规则产生的数据的回写地址，常见时序数据库配置示例',
       read_addr: '时序库内网地址',
@@ -71,6 +76,8 @@ const zh_CN = {
       disable_write: '不允许写入',
       enable_write: '允许写入',
       version: '版本',
+      version_placeholder: '留空将自动获取版本，没特殊需求留空即可；如需指定，请按 x.y.z 填写（例：7.10.2）',
+      version_tip: '留空将自动获取版本，没特殊需求留空即可；如需指定，请按 x.y.z 填写（例：7.10.2）',
       max_shard: '最大并发分片请求数',
       min_interval: '最小时间间隔(s)',
       min_interval_tip: '按时间间隔自动分组的下限。建议设置为写入频率，例如，如果数据每分钟写入一次，则为1m。',
@@ -100,6 +107,13 @@ const zh_CN = {
   skip_tls_verify: '跳过 TLS 检查',
   label_mapping: {
     title: '标签丰富',
+  },
+  endpoint_title: '服务入口',
+  mtls: {
+    ca_cert: 'CA 证书',
+    server_name: '服务器名称',
+    client_cert: '客户端证书',
+    client_key: '客户端密钥',
   },
 };
 export default zh_CN;

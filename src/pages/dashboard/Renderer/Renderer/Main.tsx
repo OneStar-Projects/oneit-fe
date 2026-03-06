@@ -19,7 +19,10 @@ import {
   FieldTimeOutlined,
   EyeOutlined,
 } from '@ant-design/icons';
+
 import { IRawTimeRange } from '@/components/TimeRangePicker';
+import replaceTemplateVariables from '@/pages/dashboard/Variables/utils/replaceTemplateVariables';
+
 import PanelEmpty from '../components/PanelEmpty';
 import CloneIcon from '../components/CloneIcon';
 import Timeseries from './TimeSeriesNG';
@@ -35,7 +38,6 @@ import Iframe from './Iframe';
 import Heatmap from './Heatmap';
 import BarChart from './BarChart';
 import Markdown from '../../Editor/Components/Markdown';
-import replaceFieldWithVariable from '../utils/replaceFieldWithVariable';
 import getPanelCustomTimeDescribe from '../utils/getPanelCustomTimeDescribe';
 import Inspect from '../Inspect';
 import { IProps } from './index';
@@ -63,11 +65,8 @@ function index(
   const {
     panelWidth,
     themeMode,
-    dashboardId,
-    dashboardID,
     id,
     timezone,
-    variableConfig,
     isPreview,
     isAuthorized,
     annotations,
@@ -91,10 +90,16 @@ function index(
   const tableRef = useRef<any>(null);
   const bodyWrapRef = useRef<HTMLDivElement>(null);
   const { query, series, error, loading, loaded, range } = queryResult;
-  const name = replaceFieldWithVariable(dashboardId, values.name, variableConfig, values.scopedVars);
-  const description = replaceFieldWithVariable(dashboardId, values.description, variableConfig, values.scopedVars);
+  const name = replaceTemplateVariables(values.name, {
+    scopedVars: values.scopedVars,
+    range: time,
+  });
+  const description = replaceTemplateVariables(values.description, {
+    scopedVars: values.scopedVars,
+    range: time,
+  });
   const tipsVisible = description || !_.isEmpty(values.links);
-  const panelCustomTimeDescribe = getPanelCustomTimeDescribe(series);
+  const panelCustomTimeDescribe = getPanelCustomTimeDescribe(values.queryOptionsTime);
 
   // TODO: 如果 hexbin 的 colorRange 为 string 时转成成 array
   if (typeof _.get(values, 'custom.colorRange') === 'string') {
@@ -110,7 +115,6 @@ function index(
     timeseries: () => (
       <Timeseries
         {...subProps}
-        dashboardID={dashboardID}
         annotations={annotations}
         setAnnotationsRefreshFlag={props.setAnnotationsRefreshFlag}
         themeMode={themeMode}
@@ -121,16 +125,16 @@ function index(
       />
     ),
     stat: () => <Stat {...subProps} bodyWrapRef={bodyWrapRef} themeMode={themeMode} isPreview={isPreview} />,
-    table: () => <Table {...subProps} themeMode={themeMode} time={time} isPreview={isPreview} ref={tableRef} />,
-    tableNG: () => <TableNG {...subProps} themeMode={themeMode} time={time} isPreview={isPreview} />,
-    pie: () => <Pie {...subProps} themeMode={themeMode} time={time} isPreview={isPreview} />,
-    hexbin: () => <Hexbin {...subProps} themeMode={themeMode} time={time} isPreview={isPreview} />,
-    barGauge: () => <BarGauge {...subProps} themeMode={themeMode} time={time} isPreview={isPreview} />,
+    table: () => <Table {...subProps} themeMode={themeMode} isPreview={isPreview} ref={tableRef} />,
+    tableNG: () => <TableNG {...subProps} themeMode={themeMode} isPreview={isPreview} />,
+    pie: () => <Pie {...subProps} themeMode={themeMode} isPreview={isPreview} />,
+    hexbin: () => <Hexbin {...subProps} themeMode={themeMode} isPreview={isPreview} />,
+    barGauge: () => <BarGauge {...subProps} themeMode={themeMode} isPreview={isPreview} />,
     text: () => <Text {...subProps} themeMode={themeMode} />,
     gauge: () => <Gauge {...subProps} themeMode={themeMode} isPreview={isPreview} />,
-    iframe: () => <Iframe {...subProps} time={time} />,
-    heatmap: () => <Heatmap {...subProps} themeMode={themeMode} time={time} isPreview={isPreview} />,
-    barchart: () => <BarChart {...subProps} themeMode={themeMode} time={time} isPreview={isPreview} />,
+    iframe: () => <Iframe {...subProps} />,
+    heatmap: () => <Heatmap {...subProps} themeMode={themeMode} isPreview={isPreview} />,
+    barchart: () => <BarChart {...subProps} themeMode={themeMode} isPreview={isPreview} />,
   };
 
   return (
@@ -148,6 +152,7 @@ function index(
               placement='leftTop'
               overlayInnerStyle={{
                 maxWidth: 300,
+                wordBreak: 'break-all',
               }}
               getPopupContainer={() => containerEleRef.current!}
             >
@@ -170,6 +175,7 @@ function index(
                 placement='top'
                 overlayInnerStyle={{
                   maxWidth: 300,
+                  wordBreak: 'break-all',
                 }}
                 getPopupContainer={() => containerEleRef.current!}
                 title={
@@ -178,8 +184,17 @@ function index(
                     {_.map(values.links, (link, i) => {
                       return (
                         <div key={i}>
-                          <a href={replaceFieldWithVariable(dashboardId, link.url, variableConfig, values.scopedVars)} target={link.targetBlank ? '_blank' : '_self'}>
-                            {replaceFieldWithVariable(dashboardId, link.title, variableConfig, values.scopedVars)}
+                          <a
+                            href={replaceTemplateVariables(link.url, {
+                              scopedVars: values.scopedVars,
+                              range: time,
+                            })}
+                            target={link.targetBlank ? '_blank' : '_self'}
+                          >
+                            {replaceTemplateVariables(link.title, {
+                              scopedVars: values.scopedVars,
+                              range: time,
+                            })}
                           </a>
                         </div>
                       );
@@ -239,6 +254,7 @@ function index(
                             {t('common:btn.view')}
                           </Space>
                         </Menu.Item>
+
                         <Menu.Item
                           onClick={() => {
                             setVisible(true);
@@ -342,24 +358,25 @@ function index(
                             </Menu.Item>
                           </Tooltip>
                         )}
-
-                        <Menu.Item
-                          onClick={() => {
-                            setVisible(false);
-                            setTime &&
-                              setTime({
-                                ...time,
-                                refreshFlag: _.uniqueId('refreshFlag_ '),
-                              });
-                            setInspect(true);
-                          }}
-                          key='inspect_btn'
-                        >
-                          <Space>
-                            <InfoCircleOutlined />
-                            {t('inspect_btn')}
-                          </Space>
-                        </Menu.Item>
+                        {!isPreview && (
+                          <Menu.Item
+                            onClick={() => {
+                              setVisible(false);
+                              setTime &&
+                                setTime({
+                                  ...time,
+                                  refreshFlag: _.uniqueId('refreshFlag_ '),
+                                });
+                              setInspect(true);
+                            }}
+                            key='inspect_btn'
+                          >
+                            <Space>
+                              <InfoCircleOutlined />
+                              {t('inspect_btn')}
+                            </Space>
+                          </Menu.Item>
+                        )}
                         {isAuthorized && !values.repeatPanelId && (
                           <Menu.Item
                             onClick={() => {

@@ -33,6 +33,7 @@ const zh_HK = {
     disabled: '停用中',
   },
   form: {
+    advanced_settings: '高級設置',
     other: '其他',
     name: '名稱',
     name_msg: '請輸入字母/數字/下劃線，必須以字母開頭',
@@ -54,8 +55,12 @@ const zh_HK = {
     cluster_confirm_ok: '不做關聯',
     cluster_confirm_cancel: '去做關聯',
     cluster_not_found: '關聯告警引擎已停用，當前數據源的告警不再生效。請檢查告警引擎配置或重新修改數據源關聯的告警引擎',
+    protocol: '協議',
+    secure_connection: '安全連接（SSL/TLS）',
     url_no_spaces_msg: '請勿輸入空格',
+    url_no_http_msg: 'URL 不能以 http:// 或 https:// 開頭',
     url_required_msg: 'URL 不能為空',
+    logs_max_query_rows: '返回的最大日誌條數',
     prom: {
       write_addr_tip: '記錄規則產生的資料的回寫地址，常見時序資料庫配置示例',
       read_addr: '時序庫內網地址',
@@ -69,6 +74,8 @@ const zh_HK = {
     es: {
       enable_write: '允許寫入',
       version: '版本',
+      version_placeholder: '留空將自動獲取版本，沒特殊需求留空即可；如需指定，請按 x.y.z 填寫（例：7.10.2）',
+      version_tip: '留空將自動獲取版本，沒特殊需求留空即可；如需指定，請按 x.y.z 填寫（例：7.10.2）',
       max_shard: '最大併發分片請求數',
       min_interval: '最小時間間隔 (s)',
       min_interval_tip: '按時間間隔自動分組的下限。建議設定為寫入頻率，例如，如果資料每分鐘寫入一次，則為 1m。',
@@ -98,6 +105,13 @@ const zh_HK = {
   skip_tls_verify: '跳過 TLS 驗證',
   label_mapping: {
     title: '標籤豐富',
+  },
+  endpoint_title: '服務入口',
+  mtls: {
+    ca_cert: 'CA 證書',
+    server_name: '伺服器名稱',
+    client_cert: '用戶端證書',
+    client_key: '用戶端密鑰',
   },
 };
 

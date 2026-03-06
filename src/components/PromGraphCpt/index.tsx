@@ -63,6 +63,7 @@ interface IProps {
   onChange?: (promQL?: string) => void;
   promQLInputTooltip?: string;
   extra?: React.ReactElement;
+  showExportButton?: boolean; // 是否显示导出按钮
 }
 
 const TabPane = Tabs.TabPane;
@@ -96,6 +97,7 @@ export default function index(props: IProps) {
     promQLInputTooltip,
     extra,
     defaultRange,
+    showExportButton,
   } = props;
   const [value, setValue] = useState<string | undefined>(promQL); // for promQLInput
   const [queryStats, setQueryStats] = useState<QueryStats | null>(null);
@@ -134,6 +136,10 @@ export default function index(props: IProps) {
     }
   }, [type]);
 
+  useEffect(() => {
+    setValue(promQL);
+  }, [promQL]);
+
   return (
     <div className='prom-graph-container'>
       {headerExtra && globalOperates.enabled ? (
@@ -168,6 +174,7 @@ export default function index(props: IProps) {
           <div className='flex-shrink-1 min-w-0 w-full overflow-hidden'>
             <PromQLInputNGWithTooltipWrapper tooltip={promQLInputTooltip}>
               <PromQLInputNG
+                maxHeight={200}
                 enableAutocomplete={completeEnabled}
                 datasourceValue={datasourceValue}
                 showBuiltinMetrics={showBuiltinMetrics}
@@ -255,6 +262,7 @@ export default function index(props: IProps) {
               loading={loading}
               setLoading={setLoading}
               defaultUnit={defaultUnit}
+              showExportButton={showExportButton}
             />
           </TabPane>
           <TabPane tab='Graph' key='graph'>

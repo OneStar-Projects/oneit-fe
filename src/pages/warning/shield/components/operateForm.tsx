@@ -145,7 +145,7 @@ const OperateForm: React.FC<Props> = ({ detail = {}, type }: any) => {
             ],
       }}
     >
-      <Card className='mb2' title={t('basic_configs')}>
+      <Card className='mb-4' title={t('basic_configs')}>
         <Alert type='info' message={t('alert_content')} className='mb-2' />
         <Form.Item label={t('common:business_group')} name='group_id' required>
           <Select
@@ -176,7 +176,7 @@ const OperateForm: React.FC<Props> = ({ detail = {}, type }: any) => {
         </Form.Item>
       </Card>
       <Card
-        className='mb2'
+        className='mb-4'
         title={
           <Space>
             {t('filter_configs')}
@@ -239,7 +239,6 @@ const OperateForm: React.FC<Props> = ({ detail = {}, type }: any) => {
               <Markdown content={t('tag.key.tip')} darkMode />
             </div>
           }
-          keyLabelTootipPlacement='right'
         />
       </Card>
       <Card title={t('mute_configs')}>
@@ -290,8 +289,22 @@ const OperateForm: React.FC<Props> = ({ detail = {}, type }: any) => {
                               <PlusCircleOutlined className='control-icon-normal' onClick={() => add()} />
                             </Space>
                           </div>
-                          <div style={{ width: 110 }}>{t('mute_type.start')}</div>
-                          <div style={{ width: 110 }}>{t('mute_type.end')}</div>
+                          <div style={{ width: 110 }}>
+                            <Space>
+                              {t('mute_type.start')}
+                              <Tooltip title={t('alertRules:effective_time_tip')}>
+                                <InfoCircleOutlined />
+                              </Tooltip>
+                            </Space>
+                          </div>
+                          <div style={{ width: 110 }}>
+                            <Space>
+                              {t('mute_type.end')}
+                              <Tooltip title={t('alertRules:effective_time_tip')}>
+                                <InfoCircleOutlined />
+                              </Tooltip>
+                            </Space>
+                          </div>
                         </Space>
                         {fields.map(({ key, name, ...restField }) => (
                           <Space

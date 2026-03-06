@@ -73,7 +73,7 @@ function renderHoneyComb(
 ) {
   const t = transition().duration(750);
   const { columns: mapColumns, rows: mapRows } = getMapColumnsAndRows(width, height, data.length);
-  const hexRadius = Math.floor(min([width / ((mapColumns + 0.5) * Math.sqrt(3)), height / ((mapRows + 1 / 3) * 1.5), width / 7]));
+  const hexRadius = Math.floor(min([width / ((mapColumns + (mapRows > 1 ? 0.5 : 0)) * Math.sqrt(3)), height / ((mapRows + 1 / 3) * 1.5)]));
   const hexbinWidth = Math.sin((60 * Math.PI) / 180) * hexRadius * 2;
   const points = getPlaceHolderElems(mapRows, mapColumns, data.length, hexRadius);
   let adjustedOffSetX = (width - hexbinWidth * mapColumns) / 2 + hexbinWidth / 2;
@@ -195,7 +195,7 @@ function renderHoneyComb(
       })
       .text(function (_d, i) {
         let name = getName(data[i], valueField);
-        if (name && isShowEllipses) {
+        if (typeof name === 'string' && isShowEllipses) {
           name = name.substring(0, numOfChars) + '...';
           return name;
         }

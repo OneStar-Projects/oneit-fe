@@ -21,6 +21,7 @@ export enum TypeEnum {
   dashboard = 'dashboard',
   collect = 'collect',
   metric = 'metric',
+  firemap = 'firemap',
 }
 export interface PayloadQuery {
   component_id: number;

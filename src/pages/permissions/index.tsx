@@ -3,7 +3,9 @@ import _ from 'lodash';
 import { useTranslation } from 'react-i18next';
 import { Button, List, Input, Modal, Space } from 'antd';
 import { SafetyCertificateOutlined, SearchOutlined, EditOutlined, DeleteOutlined, PlusSquareOutlined } from '@ant-design/icons';
+
 import PageLayout, { HelpLink } from '@/components/pageLayout';
+
 import { RoleType, OperationType } from './types';
 import { getRoles, deleteRoles, getOperations } from './services';
 import RoleFormModal from './RoleFormModal';
@@ -37,13 +39,9 @@ export default function index() {
 
   return (
     <PageLayout
-      title={
-        <Space>
-          {t('title')}
-          <HelpLink src='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/personnel-permissions/permissions-management/' />
-        </Space>
-      }
+      title={<Space>{t('title')}</Space>}
       icon={<SafetyCertificateOutlined />}
+      doc='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/personnel-permissions/permissions-management/'
     >
       <div className='user-manage-content'>
         <div style={{ display: 'flex', gap: 10, height: '100%', background: 'unset' }}>
@@ -96,7 +94,7 @@ export default function index() {
               )}
             />
           </div>
-          <div className='resource-table-content'>
+          <div className='resource-table-content flex flex-col'>
             <div className='team-info'>
               <Space
                 style={{

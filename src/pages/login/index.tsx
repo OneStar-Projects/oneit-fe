@@ -21,7 +21,19 @@ import { PictureOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import _ from 'lodash';
 
-import { ifShowCaptcha, getCaptcha, getSsoConfig, getRedirectURL, getRedirectURLCAS, getRedirectURLOAuth, getRedirectURLCustom, authLogin, getRSAConfig } from '@/services/login';
+import {
+  ifShowCaptcha,
+  getCaptcha,
+  getSsoConfig,
+  getRedirectURL,
+  getRedirectURLCAS,
+  getRedirectURLOAuth,
+  getRedirectURLCustom,
+  getRedirectURLDingtalk,
+  getRedirectURLFeishu,
+  authLogin,
+  getRSAConfig,
+} from '@/services/login';
 import { RsaEncry } from '@/utils/rsa';
 import { CommonStateContext } from '@/App';
 import { AccessTokenKey } from '@/utils/constant';
@@ -46,6 +58,8 @@ export interface DisplayName {
   cas: string;
   oauth: string;
   custom?: string;
+  dingTalk?: string;
+  feishu?: string;
 }
 
 export default function Login() {
@@ -59,6 +73,8 @@ export default function Login() {
     cas: 'CAS',
     oauth: 'OAuth',
     custom: 'Custom',
+    dingTalk: 'dingTalk',
+    feishu: 'Feishu',
   });
   const [showcaptcha, setShowcaptcha] = useState(false);
   const [curLanguage, setCurLanguage] = useState(i18nMap[i18n.language] || '中文');
@@ -84,6 +100,8 @@ export default function Login() {
           cas: res.dat.casDisplayName,
           oauth: res.dat.oauthDisplayName,
           custom: res.dat.customDisplayName,
+          dingTalk: res.dat.dingTalkDisplayName,
+          feishu: res.dat.feishuDisplayName,
         });
       }
     });
@@ -186,7 +204,7 @@ export default function Login() {
 
               <img
                 ref={verifyimgRef}
-                className='mb2'
+                className='mb-4'
                 style={{
                   display: showcaptcha ? 'inline-block' : 'none',
                 }}
@@ -203,7 +221,7 @@ export default function Login() {
             {_.some(displayName, (value) => {
               return !!value;
             }) && (
-              <div className='mb1 text-[14px]'>
+              <div className='mb-2 text-[14px]'>
                 <Space align='baseline'>
                   <div>{t('other_types')}:</div>
                   {displayName.oidc && (
@@ -265,6 +283,36 @@ export default function Login() {
                       }}
                     >
                       {displayName.custom}
+                    </a>
+                  )}
+                  {displayName.dingTalk && (
+                    <a
+                      onClick={() => {
+                        getRedirectURLDingtalk(redirect).then((res) => {
+                          if (res.dat) {
+                            window.location.href = res.dat;
+                          } else {
+                            message.warning('没有配置 dingTalk 登录地址！');
+                          }
+                        });
+                      }}
+                    >
+                      {displayName.dingTalk}
+                    </a>
+                  )}
+                  {displayName.feishu && (
+                    <a
+                      onClick={() => {
+                        getRedirectURLFeishu(redirect).then((res) => {
+                          if (res.dat) {
+                            window.location.href = res.dat;
+                          } else {
+                            message.warning('没有配置 feishu 登录地址！');
+                          }
+                        });
+                      }}
+                    >
+                      {displayName.feishu}
                     </a>
                   )}
                 </Space>

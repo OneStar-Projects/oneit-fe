@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import _ from 'lodash';
 import IconFont from '@/components/IconFont';
 import { Popover } from 'antd';
 import moment from 'moment';
 import { basePrefix } from '@/App';
-import { ILogExtract, ILogURL, ILogMappingParams } from '@/pages/log/IndexPatterns/types';
+import { ILogExtract, ILogURL, ILogMappingParams, LinkContext } from '@/pages/log/IndexPatterns/types';
 import { IRawTimeRange, parseRange } from '@/components/TimeRangePicker';
+// Doris 内置保留变量，不需要替换
+const dorisBuiltInVar = [
+  '__timeFilter', '__timeFrom', '__timeTo',
+  '__unixEpochFilter', '__unixEpochFrom', '__unixEpochTo',
+  '__unixEpochNanoFilter', '__unixEpochNanoFrom', '__unixEpochNanoTo',
+  '__timeGroup', '__interval', '__interval_ms'
+];
 
 export function replaceVarAndGenerateLink(link: string, rawValue: object, regExtractArr?: ILogExtract[], mappingParamsArr?: ILogMappingParams[]): string {
   const param = new URLSearchParams(link);
@@ -60,8 +67,13 @@ export function replaceVarAndGenerateLink(link: string, rawValue: object, regExt
     const wholeWord = valueWithExtract[b];
     return wholeWord || _.get(valueWithExtract, b.split('.'));
   });
+
   const unReplaceKeyRegNew = /\$(.+?)(?=&|$)/gm;
   reallink = reallink.replace(unReplaceKeyRegNew, function (a, b) {
+    // 如果是保留字，不替换，返回原始匹配
+    if (dorisBuiltInVar.some(item => b.includes(item))) {
+      return a;
+    }
     const wholeWord = valueWithExtract[b];
     return wholeWord || _.get(valueWithExtract, b.split('.'));
   });
@@ -158,6 +170,7 @@ export const handleNav = (link: string, rawValue: object, query: { start: number
   }
   const unReplaceKeyReg = /\$\{(.+?)\}/g;
   const valueWithExtract = _.cloneDeep(rawValue);
+  // 把extractArr中的field merge到了rawValue中
   regExtractArr?.forEach((i) => {
     const { field, newField, reg } = i;
     const fieldValueWholeWord = valueWithExtract[field];
@@ -167,16 +180,23 @@ export const handleNav = (link: string, rawValue: object, query: { start: number
       valueWithExtract[newField] = arr[1];
     }
   });
+  // 第一次替换：${fieldName} 格式
   reallink = reallink.replace(unReplaceKeyReg, function (a, b) {
     const wholeWord = valueWithExtract[b];
     return wholeWord || _.get(valueWithExtract, b.split('.'));
   });
+  // 第二次替换：$fieldName 格式，到 & 或结尾为止
   const unReplaceKeyRegNew = /\$(.+?)(?=&|$)/gm;
   reallink = reallink.replace(unReplaceKeyRegNew, function (a, b) {
+    // 如果是保留字，不替换，返回原始匹配
+    if (dorisBuiltInVar.some(item => b.includes(item))) {
+      return a;
+    }
     const wholeWord = valueWithExtract[b];
     return wholeWord || _.get(valueWithExtract, b.split('.'));
   });
-  window.open(basePrefix + reallink.replace(unReplaceKeyRegNew, ''), '_blank');
+  window.open(basePrefix + reallink, '_blank');
+  // window.open(basePrefix + reallink.replace(unReplaceKeyRegNew, ''), '_blank');
 };
 
 interface IProps {
@@ -186,9 +206,10 @@ interface IProps {
   paramsArr: ILogURL[];
   regExtractArr?: ILogExtract[];
   mappingParamsArr?: ILogMappingParams[];
+  inTable?: boolean;
 }
 
-export default function Links({ rawValue, range, text, paramsArr, regExtractArr, mappingParamsArr }: IProps) {
+export default function Links({ rawValue, range, text, paramsArr, regExtractArr, mappingParamsArr, inTable }: IProps) {
   const isGold = localStorage.getItem('n9e-dark-mode') === '2';
   const parsedRange = range ? parseRange(range) : null;
   let start = parsedRange ? moment(parsedRange.start).unix() : 0;
@@ -210,18 +231,42 @@ export default function Links({ rawValue, range, text, paramsArr, regExtractArr,
           }
         }}
         text={text}
+        inTable={inTable}
       />
     </Popover>
   );
 }
 
-export function Link({ onClick, text, onMouseEnter, onMouseLeave }: { onClick?: () => void; text: React.ReactNode; onMouseEnter?: () => void; onMouseLeave?: () => void }) {
+export function Link({
+  onClick,
+  text,
+  onMouseEnter,
+  onMouseLeave,
+  linkContext,
+  inTable = true,
+}: {
+  onClick?: () => void;
+  text: React.ReactNode;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  linkContext?: LinkContext;
+  inTable?: boolean;
+}) {
   const isGold = localStorage.getItem('n9e-dark-mode') === '2';
-  return (
-    <span
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      style={{
+  const iconTips = !!linkContext;
+  const { rawValue, name, fieldConfig, range, parentKey } = linkContext || {};
+  const relatedLinks = iconTips && fieldConfig ? fieldConfig?.linkArr?.filter((item) => (parentKey ? item.field === parentKey : item.field === name)) : [];
+  const parsedRange = range ? parseRange(range) : null;
+  let start = parsedRange ? moment(parsedRange.start).unix() : 0;
+  let end = parsedRange ? moment(parsedRange.end).unix() : 0;
+  const style = inTable
+    ? {
+        color: isGold ? 'var(--fc-gold-text)' : 'var(--fc-fill-primary)',
+        textDecoration: 'underline',
+        textDecorationColor: 'rgb(var(--fc-fill-primary-rgb) / 0.5)',
+        textUnderlineOffset: 2,
+      }
+    : {
         display: 'inline-flex',
         textDecoration: 'underline',
         fontWeight: 'bold',
@@ -233,13 +278,57 @@ export function Link({ onClick, text, onMouseEnter, onMouseLeave }: { onClick?: 
         cursor: 'pointer',
         lineHeight: '22px',
         alignItems: 'center',
-      }}
-      onClick={onClick}
-    >
-      {text}
-      <span style={{ background: '#fff', marginLeft: 6, display: 'inline-flex', padding: 3, borderRadius: 2 }}>
-        <IconFont type='icon-ic_arrow_right' style={{ color: 'var(--fc-fill-primary)', height: 12 }} />
+      };
+  const linkIcon = inTable ? (
+    <IconFont type='icon-ic_launch' style={{ color: 'var(--fc-fill-primary)', marginLeft: 6 }} />
+  ) : (
+    <span style={{ background: '#fff', marginLeft: 6, display: 'inline-flex', padding: 3, borderRadius: 2 }}>
+      <IconFont type='icon-ic_arrow_right' style={{ color: 'var(--fc-fill-primary)' }} />
+    </span>
+  );
+  return (
+    <span style={{ ...style }}>
+      <span
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+        style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'underline', textDecorationColor: 'rgb(var(--fc-fill-primary-rgb) / 0.5)', textUnderlineOffset: 2 }}
+      >
+        {text}
+        {!iconTips && linkIcon}
       </span>
+      {iconTips && (
+        <Popover
+          placement='right'
+          overlayClassName='popover-json'
+          content={relatedLinks.map((item, i) => (
+            <div key={i} style={{ lineHeight: '24px' }}>
+              <a
+                onClick={() => {
+                  const valueObjected = Object.entries(rawValue || {}).reduce((acc, [key, value]) => {
+                    if (typeof value === 'string') {
+                      try {
+                        acc[key] = JSON.parse(value);
+                      } catch (e) {
+                        acc[key] = value;
+                      }
+                    } else {
+                      acc[key] = value;
+                    }
+                    return acc;
+                  }, {});
+
+                  handleNav(item.urlTemplate, valueObjected, { start, end }, fieldConfig?.regExtractArr, fieldConfig?.mappingParamsArr);
+                }}
+              >
+                {item.name}
+              </a>
+            </div>
+          ))}
+        >
+          {linkIcon}
+        </Popover>
+      )}
     </span>
   );
 }

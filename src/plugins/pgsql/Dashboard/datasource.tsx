@@ -2,23 +2,21 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import { IRawTimeRange, parseRange } from '@/components/TimeRangePicker';
-import { IVariable } from '@/pages/dashboard/VariableConfig/definition';
-import replaceFieldWithVariable from '@/pages/dashboard/Renderer/utils/replaceFieldWithVariable';
+import replaceTemplateVariables from '@/pages/dashboard/Variables/utils/replaceTemplateVariables';
 
 import { getDsQuery2, getLogsQuery } from '../services';
 import { NAME_SPACE, QUERY_KEY } from '../constants';
 
 interface IOptions {
   id?: string; // panelId
-  dashboardId: string;
   datasourceValue: number;
   time: IRawTimeRange;
   targets: any[];
-  variableConfig?: IVariable[];
   spanNulls?: boolean;
   scopedVars?: any;
   inspect?: boolean;
   custom: any;
+  queryOptionsTime?: IRawTimeRange;
 }
 
 interface Result {
@@ -27,7 +25,7 @@ interface Result {
 }
 
 export default async function mysqlQuery(options: IOptions): Promise<Result> {
-  const { dashboardId, time, targets, variableConfig, datasourceValue } = options;
+  const { time, targets, datasourceValue, queryOptionsTime } = options;
   if (!time.start) return Promise.resolve({ series: [] });
   const parsedRange = parseRange(time);
   let start = moment(parsedRange.start).unix();
@@ -38,14 +36,14 @@ export default async function mysqlQuery(options: IOptions): Promise<Result> {
   let series: any[] = [];
   if (targets && typeof datasourceValue === 'number') {
     _.forEach(targets, (target) => {
-      if (target.time) {
-        const parsedRange = parseRange(target.time);
+      if (queryOptionsTime) {
+        const parsedRange = parseRange(queryOptionsTime);
         start = moment(parsedRange.start).unix();
         end = moment(parsedRange.end).unix();
       }
       const query: any = target.query || {};
       if (!query[QUERY_KEY]) return;
-      const queryStr = variableConfig ? replaceFieldWithVariable(dashboardId, query[QUERY_KEY], variableConfig) : query[QUERY_KEY];
+      const queryStr = replaceTemplateVariables(query[QUERY_KEY]);
       const mode = query.mode;
       if (target.__mode__ === '__expr__') {
         exps.push({
@@ -117,6 +115,7 @@ export default async function mysqlQuery(options: IOptions): Promise<Result> {
             isExp,
             metric: serie.metric,
             data: serie.values,
+            mode: 'timeSeries',
           });
         }
       });
@@ -130,6 +129,7 @@ export default async function mysqlQuery(options: IOptions): Promise<Result> {
             target: currentTarget,
             metric: subItem,
             data: [],
+            mode: 'raw',
           };
         });
       }),

@@ -5,6 +5,7 @@ const en_US = {
   tab_collectTpls: 'Collect templates',
   tab_metrics: 'Metrics',
   tab_dashboards: 'Dashboards',
+  tab_firemap: 'Firemap',
   ident: 'Name',
   logo: 'Logo',
   enable: 'Enable',
@@ -30,11 +31,13 @@ const en_US = {
       alert: 'Edit alert rule',
       dashboard: 'Edit dashboard',
       collect: 'Edit collect template',
+      firemap: 'Edit firemap rule',
     },
     create: {
       alert: 'Create alert rule',
       dashboard: 'Create dashboard',
       collect: 'Create collect template',
+      firemap: 'Create firemap rule',
     },
     no_select: {
       alert: 'Please select alert rules',
@@ -43,6 +46,7 @@ const en_US = {
     help: {
       alert: 'Create and edit alert rules under your own business group, export the alert rule JSON after completion, and fill in the following',
       dashboard: 'Create and edit dashboards under your own business group, export the dashboard JSON after completion, and fill in the following',
+      firemap: 'Create and edit firemaps under your own business group, export the firemap JSON after completion, and fill in the following',
     },
   },
   payloads: 'Templates',
@@ -52,7 +56,9 @@ const en_US = {
   import_to_buisGroup: 'Import to business group',
   import_to_buisGroup_invaild: 'Cannot import alert rules of different data source types',
   payload_by_system: 'System',
-  
+  tab_agentManagement: 'Agent Management',
+  tab_agentTemplate: 'Agent Template',
+  tab_deploymentManagement: 'Deployment Management',
   // Agent Management
   'Agent Management': 'Agent Management',
   'Agent Template Management': 'Agent Template Management',
@@ -134,5 +140,13 @@ const en_US = {
   'Please input version': 'Please input version',
   'Please upload agent binary or input download URL': 'Please upload agent binary or input download URL',
   'Please input binary URL': 'Please input binary URL',
+  firemap: {
+    drill_path: 'Drill down path',
+    urlConfig: 'Jump address',
+    dashboardConfig: 'Dashboard',
+    logExplore: 'Log search',
+    no_drilldown_rules: 'No drilldown path, can be added in the rule',
+    no_drilldown_rules_other: 'Already have several drilldown paths, no need to configure separately',
+  },
 };
 export default en_US;

@@ -60,7 +60,7 @@ const getESFilterByQuery = (query: { [index: string]: string | null }) => {
 export const getFormValuesBySearchParams = (params: { [index: string]: string | null }) => {
   const data_source_name = _.get(params, 'data_source_name');
   const data_source_id = _.get(params, 'data_source_id');
-  const query = _.get(params, 'query');
+  const query = _.get(params, 'query') || undefined;
   if (data_source_name && data_source_id) {
     const formValues: {
       datasourceCate: string;
@@ -110,7 +110,6 @@ export const getFormValuesBySearchParams = (params: { [index: string]: string | 
         };
       }
     } else if (data_source_name === DatasourceCateEnum.loki) {
-      const query = _.get(params, 'query');
       const limit = _.get(params, 'limit');
       if (query) {
         return {
@@ -126,6 +125,24 @@ export const getFormValuesBySearchParams = (params: { [index: string]: string | 
       return {
         ...formValues,
         query: {
+          query,
+          range,
+        },
+      };
+    } else if (data_source_name === DatasourceCateEnum.doris) {
+      const mode = _.get(params, 'mode');
+      const submode = _.get(params, 'submode');
+      const database = _.get(params, 'database');
+      const table = _.get(params, 'table');
+      const time_field = _.get(params, 'time_field');
+      return {
+        ...formValues,
+        query: {
+          mode,
+          submode,
+          database,
+          table,
+          time_field,
           query,
           range,
         },

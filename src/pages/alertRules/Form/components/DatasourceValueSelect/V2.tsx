@@ -47,7 +47,7 @@ const getInvalidDatasourceIds = (ids: number[], fullDatasourceList: any[]) => {
   return invalid;
 };
 
-function Query({ idx, names, field, remove, invalidDatasourceIds, datasourceList, disabled }) {
+function Query({ idx, names, field, remove, invalidDatasourceIds, datasourceList, disabled, fields }) {
   const { t } = useTranslation('alertRules');
   const form = Form.useFormInstance();
   const match_type = Form.useWatch([...names, field.name, 'match_type']);
@@ -159,14 +159,16 @@ function Query({ idx, names, field, remove, invalidDatasourceIds, datasourceList
           </Col>
         </>
       )}
-      <Col flex='none'>
-        <MinusCircleOutlined
-          className='mt1'
-          onClick={() => {
-            remove(field.name);
-          }}
-        />
-      </Col>
+      {fields.length > 1 && (
+        <Col flex='none'>
+          <MinusCircleOutlined
+            className='mt-2'
+            onClick={() => {
+              remove(field.name);
+            }}
+          />
+        </Col>
+      )}
     </Row>
   );
 }
@@ -258,10 +260,11 @@ export default function index(props: IProps) {
                   invalidDatasourceIds={invalidDatasourceIds}
                   datasourceList={datasourceList}
                   disabled={disabled}
+                  fields={fields}
                 />
               );
             })}
-            <div className='mb2'>
+            <div className='mb-4'>
               <Space>
                 <Button
                   type='primary'
@@ -312,9 +315,9 @@ export default function index(props: IProps) {
                       </span>
                     </Tooltip>
 
-                    <span className='pl1'>{t('invalid_datasource_tip_2')}</span>
+                    <span className='pl-2'>{t('invalid_datasource_tip_2')}</span>
                     <a
-                      className='pl1'
+                      className='pl-2'
                       onClick={(e) => {
                         e.preventDefault();
                         fetchDatasourceList();

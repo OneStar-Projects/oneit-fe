@@ -40,7 +40,7 @@ const ja_JP = {
       time_sort_asc: '時間昇順',
       all: '全て',
       custom: 'カスタム',
-      custom_validated: '数は1-65535の間でなければなりません',
+      custom_validated: '数値を超過できません{{maxCount}}',
       all_quantity: '合計約',
       createSuccess: 'タスク作成成功',
     },
@@ -58,11 +58,19 @@ const ja_JP = {
       del_btn_tips: '削除してよろしいですか？',
       del_btn: '削除',
       emptyText: 'エクスポートレコードが見つかりません。ログクエリを実行し、ダウンロードをクリックしてください。',
+      size: 'ファイルサイズ',
+      reload_btn_tip: 'リロード',
     },
     field_actions: {
       and: 'この検索に追加',
       not: 'この検索から除外',
       exists: 'フィールドが存在するドキュメントをフィルタリング',
+    },
+    field_values_topn: {
+      label: 'トップ {{n}} の値',
+      settings: {
+        title: 'トップ N の値設定',
+      },
     },
   },
   historicalRecords: {
@@ -74,6 +82,69 @@ const ja_JP = {
   help: 'データソースヘルプを表示',
   clear_tabs: 'クリア',
   clear_tabs_tip: '現在のタブのみを保持',
+  stats: {
+    unique_count: 'ユニーク値の数',
+    min: '最小値',
+    max: '最大値',
+    sum: '合計',
+    avg: '平均値',
+    topn_no_data: 'データがありません',
+    unindexable: 'フィールドはインデックス化できません。統計分析を実行できません',
+  },
+  field_list: {
+    show_fields: 'フィールドを表示',
+    available_fields: '利用可能なフィールド',
+  },
+  empty_value_not_supported_tip: '空の値はサポートされていません',
+  logs: {
+    title: 'ログデータ',
+    count: '結果数',
+    filter_fields: 'フィルタフィールド',
+    settings: {
+      mode: {
+        origin: '元の',
+        table: 'テーブル',
+      },
+      breakLine: '改行',
+      reverse: '時間',
+      lines: '行番号',
+      time: 'ログ時間',
+      organizeFields: {
+        title: 'フィールド列設定',
+        allFields: '利用可能なフィールド',
+        showFields: '表示フィールド',
+        showFields_empty: 'ログのデフォルト表示フィールドを全て表示',
+      },
+      jsonSettings: {
+        title: 'JSON設定',
+        displayMode: 'デフォルト表示タイプ',
+        displayMode_tree: 'ツリー表示',
+        displayMode_string: '文字列表示',
+        expandLevel: 'デフォルト展開レベル',
+      },
+      pageLoadMode: {
+        title: 'ページ読み込みモード',
+        pagination: 'ページネーション',
+        infiniteScroll: '無限スクロール',
+      },
+    },
+    tagsDetail: 'Tag 詳細',
+    expand: '展開',
+    collapse: '折りたたむ',
+    fieldValues_topnNoData: 'データなし',
+    stats: {
+      numberOfUniqueValues: 'ユニークな値の数',
+      min: '最小値',
+      max: '最大値',
+      sum: '合計',
+      avg: '平均値',
+    },
+    fieldLabelTip: 'フィールドが統計に対応していないため、統計分析を行うことができません',
+    filterAnd: 'この検索に追加',
+    filterNot: 'この検索から除外',
+    total: 'ログの数',
+    stack_group_by_tip: 'このフィールド値でスタックされたトレンドチャートを表示',
+  },
 };
 
 export default ja_JP;

@@ -4,7 +4,7 @@ import moment from 'moment';
 import { mapOptionToRelativeTimeRange, mapRelativeTimeRangeToOption } from '@/components/TimeRangePicker';
 import { DatasourceCateEnum, IS_PLUS } from '@/utils/constant';
 
-import { defaultRuleConfig, datasourceDefaultValue, defaultValues } from './constants';
+import { getDefaultRuleConfig, datasourceDefaultValue, defaultValues } from './constants';
 import { DATASOURCE_ALL } from '../constants';
 // @ts-ignore
 import * as alertUtils from 'plus:/parcels/AlertRule/utils';
@@ -150,7 +150,7 @@ export function processFormValues(values) {
     };
   });
   const data = {
-    ..._.omit(values, 'effective_time'),
+    ..._.omit(values, ['effective_time']),
     cate,
     enable_days_of_weeks: values.effective_time.map((item) => item.enable_days_of_week),
     enable_stimes: values.effective_time.map((item) => item.enable_stime.format('HH:mm')),
@@ -161,7 +161,16 @@ export function processFormValues(values) {
     callbacks: _.map(values.callbacks, (item) => item.url),
     annotations: _.chain(values.annotations).keyBy('key').mapValues('value').value(),
     extra_config: {
-      ...extra_config,
+      ..._.omit(extra_config),
+      service_cal_configs: _.map(extra_config.service_cal_configs, (item) => {
+        return {
+          service_cal_ids: item.service_cal_ids,
+          time_range: {
+            start: item.time_range.start.format('HH:mm'),
+            end: item.time_range.end.format('HH:mm'),
+          },
+        };
+      }),
       enrich_queries,
     },
   };
@@ -236,12 +245,22 @@ export function processInitialValues(values) {
     })),
     extra_config: {
       ...extra_config,
+      service_cal_configs: _.map(values?.extra_config?.service_cal_configs, (item) => {
+        return {
+          service_cal_ids: item.service_cal_ids,
+          time_range: {
+            start: item.time_range.start ? moment(item.time_range.start, 'HH:mm') : undefined,
+            end: item.time_range.end ? moment(item.time_range.end, 'HH:mm') : undefined,
+          },
+        };
+      }),
       enrich_queries,
     },
   };
 }
 
 export function getDefaultValuesByCate(prod, cate) {
+  const defaultRuleConfig = getDefaultRuleConfig(cate);
   if (cate === 'host') {
     return {
       prod,
@@ -351,6 +370,23 @@ export function getDefaultValuesByCate(prod, cate) {
             // log_ql: '',
             prom_ql: '', // 为了兼容老版本
             severity: 2,
+          },
+        ],
+      },
+      ...datasourceDefaultValue,
+    };
+  }
+  if (cate === DatasourceCateEnum.doris) {
+    return {
+      prod,
+      cate,
+      rule_config: {
+        ...defaultRuleConfig,
+        queries: [
+          {
+            ref: 'A',
+            interval: 1,
+            interval_unit: 'min',
           },
         ],
       },

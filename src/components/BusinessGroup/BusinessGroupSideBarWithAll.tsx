@@ -3,6 +3,10 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { Space, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { useHistory, useLocation } from 'react-router-dom';
+import queryString from 'query-string';
+import _ from 'lodash';
+
 import BusinessGroup, { getCleanBusinessGroupIds } from './';
 import './locale';
 
@@ -23,20 +27,30 @@ interface Props {
   allOptionTooltip?: string;
 }
 
-export function getDefaultGids(localeKey: string, businessGroup: any) {
+export function getDefaultGids(localeKey: string, businessGroup: any, queryParamsIds?: string | (string | null)[] | null) {
+  if (queryParamsIds && typeof queryParamsIds === 'string') {
+    return queryParamsIds;
+  }
   return localStorage.getItem(localeKey) || businessGroup.ids || '-2';
 }
 
-export function getDefaultGidsInDashboard(localeKey: string, businessGroup: any) {
+export function getDefaultGidsInDashboard(queryParams: any, localeKey: string, businessGroup: any) {
+  if (queryParams['preset-filter'] === 'public') {
+    return '-1';
+  }
   return localStorage.getItem(localeKey) || businessGroup.ids || '-1';
 }
 
 export default function BusinessGroupSideBarWithAll(props: Props) {
   const { t } = useTranslation('BusinessGroup');
+  const location = useLocation();
+  const query = queryString.parse(location.search);
+  const history = useHistory();
   const { gids, setGids, localeKey, showPublicOption, publicOptionLabel, allOptionLabel, allOptionTooltip } = props;
 
   return (
     <BusinessGroup
+      selected={gids}
       renderHeadExtra={() => {
         return (
           <div>
@@ -50,6 +64,13 @@ export default function BusinessGroupSideBarWithAll(props: Props) {
                 onClick={() => {
                   setGids('-1');
                   localStorage.setItem(localeKey, '-1');
+                  // TODO: 选择预置条件时清理掉业务组的 ids 和 isLeaf 参数
+                  history.push({
+                    pathname: location.pathname,
+                    search: queryString.stringify({
+                      ..._.omit(query, ['ids', 'isLeaf']),
+                    }),
+                  });
                 }}
               >
                 {publicOptionLabel}
@@ -63,6 +84,13 @@ export default function BusinessGroupSideBarWithAll(props: Props) {
               onClick={() => {
                 setGids('-2');
                 localStorage.setItem(localeKey, '-2');
+                // TODO: 选择预置条件时清理掉业务组的 ids 和 isLeaf 参数
+                history.push({
+                  pathname: location.pathname,
+                  search: queryString.stringify({
+                    ..._.omit(query, ['ids', 'isLeaf']),
+                  }),
+                });
               }}
             >
               <Space>

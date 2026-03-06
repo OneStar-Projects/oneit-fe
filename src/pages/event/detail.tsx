@@ -38,7 +38,7 @@ const EventDetailPage = () => {
   }, [eventId]);
 
   return (
-    <PageLayout title={t('detail.title')} showBack backPath='/alert-his-events'>
+    <PageLayout title={t('detail.title')} showBack backPath='/alert-his-events' doc='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/monitor/event/'>
       <div className='n9e'>
         <Card size='small' className='mb-2'>
           <DetailNG data={eventDetail} showGraph />
@@ -46,6 +46,7 @@ const EventDetailPage = () => {
         <Affix offsetBottom={0}>
           <Card size='small' className='affix-bottom-shadow'>
             {getActions({
+              showAckBtn: true,
               eventDetail: eventDetail,
               showSharingLink: false,
             })}

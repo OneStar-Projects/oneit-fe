@@ -20,7 +20,7 @@ import _ from 'lodash';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import PageLayout, { HelpLink } from '@/components/pageLayout';
-import { Button, Table, Input, message, List, Row, Col, Modal, Space } from 'antd';
+import { Button, Table, Input, message, List, Row, Col, Modal, Space, Tag } from 'antd';
 import { EditOutlined, DeleteOutlined, SearchOutlined, UserOutlined, InfoCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import UserInfoModal from './component/createModal';
 import { getTeamInfoList, getTeamInfo, deleteTeam, deleteMember } from '@/services/manage';
@@ -97,6 +97,16 @@ const Resource: React.FC = () => {
       dataIndex: 'phone',
       render: (text: string, record) => record.phone || '-',
     },
+    {
+      title: t('user.busi_groups'),
+      dataIndex: 'busi_groups',
+      render: (text: string, record) => {
+        if (_.isEmpty(record.busi_groups)) return '-';
+        return _.map(record.busi_groups, (item) => {
+          return <Tag key={item.id}>{item.name}</Tag>;
+        });
+      },
+    },
   ];
 
   const teamMemberColumns: ColumnsType<User> = [
@@ -107,7 +117,7 @@ const Resource: React.FC = () => {
       render: (text: string, record) => (
         <Button
           type='link'
-          className='p0'
+          className='p-0'
           danger
           onClick={() => {
             let params = {
@@ -223,13 +233,9 @@ const Resource: React.FC = () => {
 
   return (
     <PageLayout
-      title={
-        <Space>
-          {t('team.title')}
-          <HelpLink src='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/personnel-permissions/team-management/' />
-        </Space>
-      }
+      title={<Space>{t('team.title')}</Space>}
       icon={<UserOutlined />}
+      doc='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/personnel-permissions/team-management/'
     >
       <div className='user-manage-content'>
         <div style={{ display: 'flex', gap: 10, height: '100%', background: 'unset' }}>
@@ -345,16 +351,26 @@ const Resource: React.FC = () => {
                     // color: '#666',
                   }}
                 >
-                  <Space>
+                  <Space wrap>
                     <span>ID：{teamInfo?.id ? teamInfo.id : '-'}</span>
                     <span>
-                      {t('common:table.note')}：{teamInfo?.note ? teamInfo.note : '-'}
+                      {t('common:table.note')}: {teamInfo?.note ? teamInfo.note : '-'}
                     </span>
                     <span>
-                      {t('common:table.update_by')}：{teamInfo?.update_by ? teamInfo.update_by : '-'}
+                      {t('common:table.update_by')}: {teamInfo?.update_by ? teamInfo.update_by : '-'}
                     </span>
                     <span>
-                      {t('common:table.update_at')}：{teamInfo?.update_at ? moment.unix(teamInfo.update_at).format('YYYY-MM-DD HH:mm:ss') : '-'}
+                      {t('common:table.update_at')}: {teamInfo?.update_at ? moment.unix(teamInfo.update_at).format('YYYY-MM-DD HH:mm:ss') : '-'}
+                    </span>
+                    <span>
+                      {t('common:business_groups')}:{' '}
+                      {_.map(teamInfo?.busi_groups, (item) => {
+                        return (
+                          <Tag className='mb-1' key={item.id}>
+                            {item.name}
+                          </Tag>
+                        );
+                      })}
                     </span>
                   </Space>
                 </Col>
@@ -380,7 +396,7 @@ const Resource: React.FC = () => {
                 </Button>
               </Row>
 
-              <Table className='mt8' size='small' rowKey='id' columns={teamMemberColumns} dataSource={memberList} loading={memberLoading} pagination={pagination} />
+              <Table className='mt-2' size='small' rowKey='id' columns={teamMemberColumns} dataSource={memberList} loading={memberLoading} pagination={pagination} />
             </div>
           ) : (
             <div className='blank-busi-holder'>

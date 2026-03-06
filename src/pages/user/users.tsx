@@ -141,14 +141,14 @@ const Resource: React.FC = () => {
               <Menu>
                 {_.includes(perms, '/users/put') && (
                   <Menu.Item onClick={() => handleClick(ActionType.EditUser, record.id)}>
-                    <Button className='p0 height-auto' type='link'>
+                    <Button className='p-0 h-auto' type='link'>
                       {t('common:btn.edit')}
                     </Button>
                   </Menu.Item>
                 )}
                 {_.includes(perms, '/users/put') && (
                   <Menu.Item onClick={() => handleClick(ActionType.Reset, record.id)}>
-                    <Button className='p0 height-auto' type='link'>
+                    <Button className='p-0 h-auto' type='link'>
                       {t('account:password.reset')}
                     </Button>
                   </Menu.Item>
@@ -168,7 +168,7 @@ const Resource: React.FC = () => {
                       });
                     }}
                   >
-                    <Button danger type='link' className='p0 height-auto'>
+                    <Button danger type='link' className='p-0 h-auto'>
                       {t('common:btn.delete')}
                     </Button>
                   </Menu.Item>
@@ -247,16 +247,12 @@ const Resource: React.FC = () => {
 
   return (
     <PageLayout
-      title={
-        <Space>
-          {t('user.title')}
-          <HelpLink src='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/personnel-permissions/user-management/' />
-        </Space>
-      }
+      title={<Space>{t('user.title')}</Space>}
       icon={<UserOutlined />}
+      doc='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/personnel-permissions/user-management/'
     >
       <div className='user-manage-content'>
-        <div className='user-content n9e-border-base'>
+        <div className='user-content fc-border'>
           <Row className='event-table-search'>
             <div className='event-table-search-left'>
               <Space>
@@ -300,7 +296,7 @@ const Resource: React.FC = () => {
             </div>
           </Row>
           <Table
-            className='mt8'
+            className='mt-2'
             size='small'
             rowKey='id'
             columns={ajustColumns(userColumns, columnsConfigs)}

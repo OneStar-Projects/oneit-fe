@@ -18,6 +18,7 @@ import HTTP from './HTTP';
 import SMTP from './SMTP';
 import Script from './Script';
 import Flashduty from './Flashduty';
+import Pagerduty from './Pagerduty';
 
 interface Props {
   initialValues?: ChannelItem;
@@ -33,7 +34,7 @@ export default function FormCpt(props: Props) {
 
   return (
     <Form form={form} layout='vertical' initialValues={props.initialValues ?? DEFAULT_VALUES}>
-      <Card className='mb2' title={<Space>{t('basic_configuration')}</Space>}>
+      <Card className='mb-4' title={<Space>{t('basic_configuration')}</Space>}>
         <Form.Item name='id' hidden>
           <Input />
         </Form.Item>
@@ -56,7 +57,7 @@ export default function FormCpt(props: Props) {
             </Form.Item>
           </Col>
         </Row>
-        <Form.Item label={t('common:table.note')} name='description' tooltip={t('note_tip')} className='mb0'>
+        <Form.Item label={t('common:table.note')} name='description' tooltip={t('note_tip')} className='mb-0'>
           <Input.TextArea />
         </Form.Item>
       </Card>
@@ -65,7 +66,7 @@ export default function FormCpt(props: Props) {
           options={[
             {
               label: (
-                <div className='n9e-flex n9e-items-center n9e-gap-1'>
+                <div className='flex items-center gap-2'>
                   <img height={16} src='/image/notification/http.png' />
                   {t('http_request_config.title')}
                 </div>
@@ -74,7 +75,7 @@ export default function FormCpt(props: Props) {
             },
             {
               label: (
-                <div className='n9e-flex n9e-items-center n9e-gap-1'>
+                <div className='flex items-center gap-2'>
                   <img height={16} src='/image/notification/smtp.png' />
                   {t('smtp_request_config.title')}
                 </div>
@@ -83,7 +84,7 @@ export default function FormCpt(props: Props) {
             },
             {
               label: (
-                <div className='n9e-flex n9e-items-center n9e-gap-1'>
+                <div className='flex items-center gap-2'>
                   <img height={16} src='/image/notification/script.png' />
                   {t('script_request_config.title')}
                 </div>
@@ -92,12 +93,21 @@ export default function FormCpt(props: Props) {
             },
             {
               label: (
-                <div className='n9e-flex n9e-items-center n9e-gap-1'>
+                <div className='flex items-center gap-2'>
                   <img height={16} src='/image/notification/flashduty.png' />
                   {t('flashduty_request_config.title')}
                 </div>
               ),
               value: 'flashduty',
+            },
+            {
+              label: (
+                <div className='flex items-center gap-2'>
+                  <img height={16} src='/image/notification/pagerduty.png' />
+                  {t('pagerduty_request_config.title')}
+                </div>
+              ),
+              value: 'pagerduty',
             },
           ]}
         />
@@ -106,7 +116,7 @@ export default function FormCpt(props: Props) {
         <Col span={12}>
           <div ref={requestContentRef}>
             <Card
-              className='mb2'
+              className='mb-4'
               title={<Space>{t('variable_configuration.title')}</Space>}
               style={{
                 display: _.includes(['http', 'script'], requestType) ? 'block' : 'none',
@@ -116,7 +126,7 @@ export default function FormCpt(props: Props) {
               <Form.List name={['param_config', 'custom', 'params']}>
                 {(fields, { add, remove }) => (
                   <>
-                    <div className='mb1'>
+                    <div className='mb-2'>
                       <Space size={4}>
                         {t('variable_configuration.params.title')}
                         <Tooltip className='n9e-ant-from-item-tooltip' title={t('variable_configuration.params.title_tip')}>
@@ -132,7 +142,7 @@ export default function FormCpt(props: Props) {
                       </Space>
                     </div>
                     {fields.length ? (
-                      <Row gutter={SIZE} className='mb1'>
+                      <Row gutter={SIZE} className='mb-2'>
                         <Col flex='auto'>
                           <Row gutter={SIZE}>
                             <Col span={12}>{t('variable_configuration.params.key')}</Col>
@@ -164,7 +174,7 @@ export default function FormCpt(props: Props) {
                           </Row>
                         </Col>
                         <Col flex='none'>
-                          <MinusCircleOutlined className='mt1' onClick={() => remove(name)} />
+                          <MinusCircleOutlined className='mt-2' onClick={() => remove(name)} />
                         </Col>
                       </Row>
                     ))}
@@ -172,11 +182,12 @@ export default function FormCpt(props: Props) {
                 )}
               </Form.List>
             </Card>
-            <Card className='mb2' title={<Space size={4}>{t(`request_configuration.${requestType}`)}</Space>}>
+            <Card className='mb-4' title={<Space size={4}>{t(`request_configuration.${requestType}`)}</Space>}>
               <HTTP />
               <SMTP />
               <Script />
               <Flashduty />
+              <Pagerduty />
             </Card>
           </div>
         </Col>
@@ -187,7 +198,7 @@ export default function FormCpt(props: Props) {
               overflow: 'auto',
             }}
           >
-            {requestType && <Document documentPath={`/docs/notification-channel/${requestType}-request`} />}
+            {requestType && <Document documentPath={`/n9e-docs/notification-channel/${requestType}-request`} />}
           </Card>
         </Col>
       </Row>

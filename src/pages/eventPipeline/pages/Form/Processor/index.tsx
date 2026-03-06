@@ -10,9 +10,7 @@ import { IS_PLUS } from '@/utils/constant';
 import DocumentDrawer from '@/components/DocumentDrawer';
 
 // @ts-ignore
-import LabelEnrich from 'plus:/parcels/eventPipeline/LabelEnrich';
-// @ts-ignore
-import Script from 'plus:/parcels/eventPipeline/Script';
+import PlusProcessor, { options as PlusOptions } from 'plus:/parcels/eventPipeline';
 
 import { NS, DEFAULT_PROCESSOR_CONFIG_MAP } from '../../../constants';
 import TestModal from '../TestModal';
@@ -111,42 +109,12 @@ export default function NotifyConfig(props: Props) {
         }
       >
         <Select
-          options={_.concat(
-            [
-              {
-                label: 'Relabel',
-                value: 'relabel',
-              },
-              {
-                label: 'Callback',
-                value: 'callback',
-              },
-              {
-                label: 'Event Update',
-                value: 'event_update',
-              },
-              {
-                label: 'Event Drop',
-                value: 'event_drop',
-              },
-              {
-                label: 'AI Summary',
-                value: 'ai_summary',
-              },
-            ],
-            IS_PLUS
-              ? [
-                  {
-                    label: 'Label Enrich',
-                    value: 'label_enrich',
-                  },
-                  {
-                    label: 'Script',
-                    value: 'script',
-                  },
-                ]
-              : [],
-          )}
+          options={_.map(_.concat(['relabel', 'event_drop', 'event_update', 'callback', 'ai_summary'], IS_PLUS ? PlusOptions : []), (item) => {
+            return {
+              label: t(`processor.options.${item}`),
+              value: item,
+            };
+          })}
           onChange={(newTyp) => {
             const newConfig = _.cloneDeep(DEFAULT_PROCESSOR_CONFIG_MAP[newTyp]);
             const formValues = _.cloneDeep(form.getFieldsValue());
@@ -154,15 +122,17 @@ export default function NotifyConfig(props: Props) {
 
             form.setFieldsValue(newFormValues);
           }}
+          showSearch
+          optionFilterProp='label'
+          disabled={disabled}
         />
       </Form.Item>
       {processorType === 'relabel' && <Relabel field={field} namePath={[field.name, 'config']} prefixNamePath={['processors']} />}
       {processorType === 'callback' && <Callback field={field} namePath={[field.name, 'config']} />}
       {processorType === 'event_update' && <Callback field={field} namePath={[field.name, 'config']} />}
       {processorType === 'event_drop' && <EventDrop field={field} namePath={[field.name, 'config']} />}
-      {processorType === 'label_enrich' && <LabelEnrich field={field} namePath={[field.name, 'config']} prefixNamePath={['processors']} />}
       {processorType === 'ai_summary' && <AISummary field={field} namePath={[field.name, 'config']} />}
-      {processorType === 'script' && <Script field={field} namePath={[field.name, 'config']} />}
+      <PlusProcessor processorType={processorType} field={field} />
 
       <TestModal type='processor' config={processorConfig} />
     </Card>

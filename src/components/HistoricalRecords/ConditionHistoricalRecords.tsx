@@ -90,10 +90,12 @@ export const getLocalQueryHistory = (localKey: string) => {
 interface Props {
   localKey: string;
   datasourceValue: number;
-  renderItem: (item: { [index: string]: string }) => React.ReactNode;
+  renderItem: (item: { [index: string]: string }, setVisible: (visible) => void) => React.ReactNode;
+  type?: 'button' | 'text';
+  children?: React.ReactNode;
 }
 
-export default function index({ localKey, datasourceValue, renderItem }: Props) {
+export default function index({ localKey, datasourceValue, renderItem, type = 'button', children }: Props) {
   const { t } = useTranslation(NAME_SPACE);
   const [search, setSearch] = useState('');
   const [visible, setVisible] = useState(false);
@@ -111,7 +113,7 @@ export default function index({ localKey, datasourceValue, renderItem }: Props) 
           <div className='mt-2 max-h-[300px] overflow-y-auto'>
             {_.map(historicalRecords, (item) => {
               if (!search || _.some(item[0], (value) => _.includes(_.toLower(value), _.toLower(search)))) {
-                return renderItem(item[0]);
+                return renderItem(item[0], setVisible);
               }
               return null;
             })}
@@ -131,13 +133,25 @@ export default function index({ localKey, datasourceValue, renderItem }: Props) 
       trigger='click'
       placement='bottomLeft'
     >
-      <Button
-        onClick={() => {
-          setVisible(true);
-        }}
-      >
-        {t('query.historicalRecords.button')}
-      </Button>
+      {type === 'button' && (
+        <Button
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          {children || t('query.historicalRecords.button')}
+        </Button>
+      )}
+      {type === 'text' && (
+        <span
+          className='cursor-pointer underline'
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          {children || t('query.historicalRecords.button')}
+        </span>
+      )}
     </Popover>
   );
 }

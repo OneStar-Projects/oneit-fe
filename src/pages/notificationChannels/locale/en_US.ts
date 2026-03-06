@@ -27,6 +27,7 @@ const en_US = {
     smtp: 'SMTP configuration',
     script: 'Script configuration',
     flashduty: 'FlashDuty configuration',
+    pagerduty: 'PagerDuty configuration',
   },
   request_type: 'Request type',
   http_request_config: {
@@ -88,6 +89,17 @@ const en_US = {
     integration_url_tip: 'The integration address created by the Flashduty Integration Center can be found at https://console.flashcat.cloud/settings/source/alert/add/n9e',
     proxy: 'Proxy',
     proxy_tip: 'HTTP PROXY address, used in scenarios that require a proxy',
+    timeout: 'Timeout (unit: ms)',
+    retry_times: 'Retry Times',
   },
+  pagerduty_request_config: {
+    title: 'PagerDuty',
+    api_key: 'API Key',
+    api_key_tip: 'The integration API Key for PagerDuty can be found in the PagerDuty console.',
+    proxy: 'Proxy',
+    proxy_tip: 'HTTP PROXY address, used in scenarios that require a proxy',
+    timeout: 'Timeout (unit: ms)',
+    retry_times: 'Retry Times',
+  }
 };
 export default en_US;

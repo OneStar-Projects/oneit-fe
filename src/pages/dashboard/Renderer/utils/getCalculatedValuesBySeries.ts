@@ -15,8 +15,9 @@
  *
  */
 import _ from 'lodash';
-import valueFormatter from './valueFormatter';
+import stringToRegex from '../../Variables/utils/stringToRegex';
 import { IValueMapping, IThresholds, IOverride } from '../../types';
+import valueFormatter from './valueFormatter';
 import getSerieName from './getSerieName';
 
 const getValueAndToNumber = (value: any[]) => {
@@ -30,9 +31,10 @@ export const getSerieTextObj = (
   thresholds?: IThresholds,
   valueRange?: [number, number],
   callValueFormatter = true,
+  rangeMode: 'lcro' | 'lcrc' = 'lcrc', // lcro: 左闭右开； lcrc: 左闭右闭
 ) => {
   const { decimals, dateFormat } = standardOptions || {};
-  const unit = standardOptions?.unit || standardOptions?.util; // TODO: 兼容之前写错的 util
+  const unit = standardOptions?.unit;
   const matchedValueMapping = _.find(valueMappings, (item: any) => {
     const { type, match } = item;
     if (value === null || value === '' || value === undefined) {
@@ -46,13 +48,19 @@ export const getSerieTextObj = (
       return false;
     } else {
       if (type === 'textValue') {
-        return value === match?.textValue;
+        if (value === match?.textValue) return true;
+        const reg = stringToRegex(match?.textValue);
+        if (reg && reg.test(value as string)) return true;
+        return false;
       }
       const toNumberValue = _.toNumber(value) as number;
       if (type === 'special') {
         return toNumberValue === match?.special;
       } else if (type === 'range') {
         if (_.isNumber(match?.from) && _.isNumber(match?.to)) {
+          if (rangeMode === 'lcro') {
+            return toNumberValue >= match?.from && toNumberValue < match?.to;
+          }
           return toNumberValue >= match?.from && toNumberValue <= match?.to;
         } else if (_.isNumber(match?.from)) {
           return toNumberValue >= match?.from;
@@ -117,7 +125,10 @@ export const getMappedTextObj = (textValue: string, valueMappings?: IValueMappin
     const matchedValueMapping = _.find(valueMappings, (item: any) => {
       const { type, match } = item;
       if (type === 'textValue') {
-        return textValue === match?.textValue;
+        if (textValue === match?.textValue) return true;
+        const reg = stringToRegex(match?.textValue);
+        if (reg && reg.test(textValue)) return true;
+        return false;
       }
       return false;
     });
@@ -248,12 +259,12 @@ const getCalculatedValuesBySeries = (
 
 export const getLegendValues = (series: any[], standardOptions, hexPalette: string[], stack = false, valueMappings?: IValueMapping[], overrides?: IOverride[]) => {
   let { decimals, dateFormat } = standardOptions || {};
-  let unit = standardOptions?.unit || standardOptions?.util; // TODO: 兼容之前写错的 util
+  let unit = standardOptions?.unit;
   const newSeries = stack ? _.reverse(_.clone(series)) : series;
   const values = _.map(newSeries, (serie, idx) => {
     const override = _.find(overrides, (item) => item.matcher?.value === serie.refId);
     if (override) {
-      unit = override?.properties?.standardOptions?.util;
+      unit = override?.properties?.standardOptions?.unit;
       decimals = override?.properties?.standardOptions?.decimals;
       dateFormat = override?.properties?.standardOptions?.dateFormat;
     }

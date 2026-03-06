@@ -117,7 +117,7 @@ export default function Graph(props: IProps) {
     custom: {
       drawStyle: 'lines',
       fillOpacity: chartType === ChartType.Line ? 0 : 0.5,
-      stack: chartType === ChartType.Line ? 'hidden' : 'noraml',
+      stack: chartType === ChartType.Line ? 'hidden' : 'normal',
       lineInterpolation: 'smooth',
     },
     options: {
@@ -130,7 +130,7 @@ export default function Graph(props: IProps) {
         sort: highLevelConfig.sharedSortDirection,
       },
       standardOptions: {
-        util: highLevelConfig.unit,
+        unit: highLevelConfig.unit,
       },
     },
   };
@@ -162,6 +162,7 @@ export default function Graph(props: IProps) {
           query: promql,
           range,
           minStep,
+          maxDataPoints: maxDataPoints || panelWidth,
         }),
         start: moment(parsedRange.start).unix(),
         end: moment(parsedRange.end).unix(),

@@ -33,6 +33,7 @@ const ja_JP = {
     disabled: '無効',
   },
   form: {
+    advanced_settings: '詳細設定',
     other: 'その他',
     name: '名前',
     name_msg: 'アルファベット/数字/アンダースコアを入力してください。アルファベットで始まる必要があります',
@@ -57,8 +58,12 @@ const ja_JP = {
     cluster_confirm_cancel: '関連付けを行う',
     cluster_not_found:
       '関連付けられたアラートエンジンが無効になっており、現在のデータソースのアラートはもはや有効ではありません。アラートエンジンの設定を確認するか、データソースの関連付けを再度修正してください。',
+    protocol: 'プロトコル',
+    secure_connection: '安全な接続（SSL/TLS）',
     url_no_spaces_msg: 'URLには空白を含めることはできません',
+    url_no_http_msg: 'URLは http:// または https:// で始めることはできません',
     url_required_msg: 'URLは空にできません',
+    logs_max_query_rows: '返される最大ログエントリ数',
     prom: {
       write_addr_tip: '記録ルールが生成するデータの書き込みアドレスの例（時系列データベースの設定例）',
       read_addr: '時系列データベースの内網アドレス',
@@ -76,6 +81,10 @@ const ja_JP = {
       disable_write: '書き込みを許可しない',
       enable_write: '書き込みを許可',
       version: 'バージョン',
+      version_placeholder:
+        '空白のままにすると自動的にバージョンを取得します。特別な要件がない場合は空白のままにしてください。指定する必要がある場合は、x.y.z 形式で記入してください（例：7.10.2）',
+      version_tip:
+        '空白のままにすると自動的にバージョンを取得します。特別な要件がない場合は空白のままにしてください。指定する必要がある場合は、x.y.z 形式で記入してください（例：7.10.2）',
       max_shard: '最大並行シャードリクエスト数',
       min_interval: '最小時間間隔(s)',
       min_interval_tip: '時間間隔による自動グループ化の下限。書き込み頻度に応じて設定することをお勧めします。例えば、データが毎分書き込まれる場合は1mに設定します。',
@@ -105,6 +114,13 @@ const ja_JP = {
   skip_tls_verify: 'TLS検証をスキップ',
   label_mapping: {
     title: 'ラベルの強化',
+  },
+  endpoint_title: 'サービスエントリ',
+  mtls: {
+    ca_cert: 'CA 証明書',
+    server_name: 'サーバー名',
+    client_cert: 'クライアント証明書',
+    client_key: 'クライアントキー',
   },
 };
 

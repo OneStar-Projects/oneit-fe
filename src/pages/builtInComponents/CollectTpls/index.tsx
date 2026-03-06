@@ -86,7 +86,7 @@ export default function index(props: Props) {
           />
         </Space>
         <Space>
-          <HelpLink src='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/template-center/business/collection-template/' />
+          <HelpLink src='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/infrastructure/collection/' />
           <AuthorizationWrapper allowedPerms={['/components/add']}>
             <Button
               type='primary'
@@ -116,7 +116,7 @@ export default function index(props: Props) {
         </Space>
       </div>
       <Table
-        className='mt8'
+        className='mt-2'
         size='small'
         rowKey='id'
         loading={loading}
@@ -203,7 +203,7 @@ export default function index(props: Props) {
                             <Button
                               type='link'
                               danger
-                              className='p0 height-auto'
+                              className='p-0 h-auto'
                               onClick={() => {
                                 Modal.confirm({
                                   title: t('common:confirm.delete'),

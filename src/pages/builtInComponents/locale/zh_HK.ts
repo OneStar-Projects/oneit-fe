@@ -5,6 +5,7 @@ const zh_HK = {
   tab_collectTpls: '採集模板',
   tab_metrics: '指標說明',
   tab_dashboards: '儀表板模板',
+  tab_firemap: '滅火圖',
   ident: '模板名稱',
   logo: '圖標',
   enable: '啟用',
@@ -30,11 +31,13 @@ const zh_HK = {
       alert: '編輯告警規則',
       dashboard: '編輯儀表板',
       collect: '編輯採集模板',
+      firemap: '編輯滅火圖規則',
     },
     create: {
       alert: '創建告警規則',
       dashboard: '創建儀表板',
       collect: '創建採集模板',
+      firemap: '創建滅火圖規則',
     },
     no_select: {
       alert: '請選擇告警規則',
@@ -43,6 +46,7 @@ const zh_HK = {
     help: {
       alert: '在您自己的業務群組下方建立並編輯警告規則，完善後匯出警告規則 JSON，填入下方即可',
       dashboard: '在您自己的業務群組下方建立並編輯儀表板，完善後匯出儀表板 JSON，填入下方即可',
+      firemap: '在您的空間下方建立並編輯滅火圖規則，完善後通過更多操作中的“導出到模版”，填入下方即可',
     },
   },
   payloads: '模板',
@@ -52,7 +56,9 @@ const zh_HK = {
   import_to_buisGroup: '導入業務組',
   import_to_buisGroup_invaild: '無法導入不同數據源類型的告警規則',
   payload_by_system: '系統內置',
-  
+  tab_agentManagement: 'Agent管理',
+  tab_agentTemplate: 'Agent模板',
+  tab_deploymentManagement: '部署管理',
   // Agent Management
   'Agent Management': 'Agent管理',
   'Agent Template Management': 'Agent模板管理',
@@ -134,6 +140,14 @@ const zh_HK = {
   'Please input version': '請輸入版本',
   'Please upload agent binary or input download URL': '請上傳Agent二進制或輸入下載URL',
   'Please input binary URL': '請輸入二進制URL',
+  firemap: {
+    drill_path: '下鑽路徑',
+    urlConfig: '跳轉地址',
+    dashboardConfig: '儀表板',
+    logExplore: '日誌檢索',
+    no_drilldown_rules: '無下鑽路徑，可在規則中新增',
+    no_drilldown_rules_other: '已內置若干下鑽路徑，無需單獨配置',
+  },
 };
 
 export default zh_HK;

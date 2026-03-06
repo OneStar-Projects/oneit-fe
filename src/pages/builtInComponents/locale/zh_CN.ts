@@ -8,6 +8,7 @@ const zh_CN = {
   tab_agentManagement: 'Agent管理',
   tab_agentTemplate: 'Agent模板',
   tab_deploymentManagement: '部署管理',
+  tab_firemap: '灭火图',
   ident: '模板名称',
   logo: '图标',
   enable: '启用',
@@ -33,11 +34,13 @@ const zh_CN = {
       alert: '编辑告警规则',
       dashboard: '编辑仪表盘',
       collect: '编辑采集模板',
+      firemap: '编辑灭火图规则',
     },
     create: {
       alert: '创建告警规则',
       dashboard: '创建仪表盘',
       collect: '创建采集模板',
+      firemap: '创建灭火图规则',
     },
     no_select: {
       alert: '请选择告警规则',
@@ -46,6 +49,7 @@ const zh_CN = {
     help: {
       alert: '在您自己的业务组下创建并编辑告警规则，完善后导出告警规则 JSON，填入下方即可',
       dashboard: '在您自己的业务组下创建并编辑仪表盘，完善后导出仪表盘 JSON，填入下方即可',
+      firemap: '在您的空间下创建并编辑灭火图规则，完善后通过更多操作中的“导出到模版”，填入下方即可',
     },
   },
   payloads: '模板',
@@ -155,5 +159,13 @@ const zh_CN = {
   'Please input version': '请输入版本',
   'Please upload agent binary or input download URL': '请上传Agent二进制或输入下载URL',
   'Please input binary URL': '请输入二进制URL',
+  firemap: {
+    drill_path: '下钻路径',
+    urlConfig: '跳转地址',
+    dashboardConfig: '仪表盘',
+    logExplore: '日志检索',
+    no_drilldown_rules: '无下钻路径，可在规则中新增',
+    no_drilldown_rules_other: '已内置若干下钻路径，无需单独配置',
+  },
 };
 export default zh_CN;

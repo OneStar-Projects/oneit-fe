@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Form, Select, InputNumber, Tooltip, Row, Col, Card, Space, Switch } from 'antd';
+import { Form, Input, Select, InputNumber, Tooltip, Row, Col, Card, Space, Switch } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import { useTranslation } from 'react-i18next';
@@ -42,13 +42,19 @@ export default function FormCpt({ action, data, onFinish, submitLoading }: any) 
         </div>
         <Row gutter={8}>
           <Col span={8}>
-            <Form.Item label={t('form.es.version')} name={['settings', 'version']} rules={[]} initialValue='7.0+'>
-              <Select
-                options={[
-                  { lebel: '6.0+', value: '6.0+' },
-                  { lebel: '7.0+', value: '7.0+' },
-                ]}
-              ></Select>
+            <Form.Item
+              label={
+                <>
+                  <span>{t('form.es.version')}</span>
+                  <Tooltip title={t('form.es.version_tip')}>
+                    <InfoCircleOutlined className='ml-2' />
+                  </Tooltip>
+                </>
+              }
+              name={['settings', 'version']}
+              rules={[]}
+            >
+              <Input placeholder={t('form.es.version_placeholder')} />
             </Form.Item>
           </Col>
           <Col span={8}>
@@ -62,7 +68,7 @@ export default function FormCpt({ action, data, onFinish, submitLoading }: any) 
                 <>
                   <span>{t('form.es.min_interval')}</span>
                   <Tooltip title={t('form.es.min_interval_tip')}>
-                    <InfoCircleOutlined className='ml8' />
+                    <InfoCircleOutlined className='ml-2' />
                   </Tooltip>
                 </>
               }
@@ -74,7 +80,7 @@ export default function FormCpt({ action, data, onFinish, submitLoading }: any) 
             </Form.Item>
           </Col>
         </Row>
-        <Space className='mb8'>
+        <Space className='mb-2'>
           <span>{t('form.es.enable_write')}</span>
           <Form.Item name={['settings', `enable_write`]} valuePropName='checked' noStyle>
             <Switch />

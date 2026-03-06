@@ -22,17 +22,10 @@ export default function Channels() {
   }, []);
 
   return (
-    <PageLayout
-      title={
-        <Space>
-          {t('title')}
-          <HelpLink src='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/system-configuration/notification-set/open-source/connect/' />
-        </Space>
-      }
-    >
+    <PageLayout title={<Space>{t('title')}</Space>} doc='https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v7/usage/personnel-permissions/contact/'>
       <div className='n9e'>
         <div className={CN}>
-          <div className='mb2 n9e-flex n9e-justify-between'>
+          <div className='mb-4 flex justify-between'>
             <div />
             <Space>
               <Button

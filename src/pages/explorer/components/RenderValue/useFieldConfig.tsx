@@ -25,7 +25,8 @@ export default function useFieldConfig(search: IFieldSearch, dep: any): FieldCon
       const isESAvailable = search.cate === 'elasticsearch' && search.resource;
       const isLokiAvailable = search.cate === 'loki' && search.query;
       const isSLSAvailable = search.cate === 'aliyun-sls' && search.resource;
-      if (isESAvailable || isLokiAvailable || isSLSAvailable) {
+      const isDorisAvailable = search.cate === 'doris' && search.resource;
+      if (isESAvailable || isLokiAvailable || isSLSAvailable || isDorisAvailable) {
         searchDrilldown(search).then((res) => {
           if (res.length > 0) {
             try {
@@ -40,6 +41,8 @@ export default function useFieldConfig(search: IFieldSearch, dep: any): FieldCon
             } catch (error) {
               console.error(error);
             }
+          } else {
+            setFieldConfig(undefined);
           }
         });
       }
