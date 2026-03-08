@@ -1,5 +1,5 @@
 import queryString from 'query-string';
-import { History } from 'history';
+import type { History, Location } from 'history';
 
 export default function replaceLocationSearch(params: {
   updatedQuery: { [key: string]: string | number | undefined | null }; // 更新后的查询参数

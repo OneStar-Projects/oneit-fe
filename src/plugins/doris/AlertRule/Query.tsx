@@ -3,7 +3,7 @@ import { Form, Row, Col, Input, Select, Space, Tooltip, Alert, InputNumber } fro
 import { CloseCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import { useTranslation, Trans } from 'react-i18next';
-import { SqlMonacoEditor } from '@fc-components/monaco-editor';
+import SqlMonacoEditor from '@/components/SqlMonacoEditor';
 
 import { CommonStateContext } from '@/App';
 import { IS_PLUS } from '@/utils/constant';

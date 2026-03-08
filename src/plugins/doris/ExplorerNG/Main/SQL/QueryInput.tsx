@@ -3,7 +3,7 @@ import { Space, Form } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
-import { SqlMonacoEditor } from '@fc-components/monaco-editor';
+import SqlMonacoEditor from '@/components/SqlMonacoEditor';
 
 import { CommonStateContext } from '@/App';
 import InputGroupWithFormItem from '@/components/InputGroupWithFormItem';

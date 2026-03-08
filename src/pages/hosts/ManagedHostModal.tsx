@@ -92,7 +92,7 @@ const ManagedHostModal: React.FC<IProps> = ({ visible, onOk, onCancel, editingHo
   return (
     <Modal
       title={editingHost ? t('Edit Host') : t('Add Host')}
-      open={visible}
+      visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
       confirmLoading={loading}

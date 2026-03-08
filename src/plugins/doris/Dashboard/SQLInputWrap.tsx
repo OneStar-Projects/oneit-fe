@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { SqlMonacoEditor } from '@fc-components/monaco-editor';
+import SqlMonacoEditor from '@/components/SqlMonacoEditor';
 
 import { CommonStateContext } from '@/App';
 

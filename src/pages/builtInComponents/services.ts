@@ -17,7 +17,7 @@
 import _ from 'lodash';
 import request from '@/utils/request';
 import { RequestMethod } from '@/store/common';
-import { Component, ComponentPost, ComponentPut, PayloadQuery, TypeEnum, Payload, PayloadPost, PayloadPut } from './types';
+import { Component, ComponentPost, ComponentPut, PayloadQuery, TypeEnum, Payload, PayloadPost, PayloadPut, HostAgentQuery, HostAgentResponse, HostAgent, AgentVersion, AgentDeployment } from './types';
 
 export type { Component, TypeEnum, Payload };
 

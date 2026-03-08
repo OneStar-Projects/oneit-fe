@@ -195,7 +195,7 @@ const ManagedHostsTable: React.FC<IProps> = ({
       />
       <Modal
         title={t('Test SSH Connection')}
-        open={isTestModalVisible}
+        visible={isTestModalVisible}
         onOk={() => setIsTestModalVisible(false)}
         onCancel={() => setIsTestModalVisible(false)}
       >

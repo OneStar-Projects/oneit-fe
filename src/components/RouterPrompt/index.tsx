@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Location } from 'history';
+import type { Location } from 'history';
 import { Modal } from 'antd';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   cancelText?: string;
   footer?: React.ReactNode;
   message?: React.ReactNode;
-  validator?: (prompt: Location) => boolean; // 自定义校验器
+  validator?: (prompt: Location & { key?: string }) => boolean; // 自定义校验器
 }
 
 export default forwardRef(function RouterPrompt(props: Props, ref) {
