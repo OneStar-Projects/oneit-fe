@@ -13,5 +13,4 @@ build.sh
 .env
 .env.advanced
 scripts/all_locales.json
-src/plus
 public/bound
